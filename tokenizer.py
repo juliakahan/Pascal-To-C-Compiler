@@ -61,3 +61,21 @@ t_LCOMM = r'\(*'
 t_RCOMM = r'\*)'
 t_LGROUP = r'\(.'
 t_RGROUP = r'\.)'
+
+
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += len(t.value)
+
+    # A string containing ignored characters (spaces and tabs)
+
+t_ignore = ' \t'
+
+
+# Error handling rule
+def t_error(t):
+    print("Illegal character '%s'" % t.value[0])
+    t.lexer.skip(1)
+
+
+lexer = lex.lex()
