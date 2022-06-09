@@ -79,8 +79,6 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
     # A string containing ignored characters (spaces and tabs)
-
-
 t_ignore = ' \t'
 
 
@@ -103,6 +101,7 @@ def p_pascal_program(p):
         p[0] = p[1] + p[2] + p[3] + p[4] + p[5] + p[6] + p[7]
     elif(p.length == 4):
         p[0] = p[1] + p[2] + p[3] + p[4]
+    return p[0]
 
 
 def p_program_id(p):
@@ -110,7 +109,7 @@ def p_program_id(p):
     program_id : PROGRAM ID
      '''
     p[0] = p[1] + p[2]
-
+    return p[0]
 
 #Id_List → ‘ID’ | Id_List ‘COMA’ ‘ID’
 def p_id_list(p):
@@ -122,25 +121,52 @@ def p_id_list(p):
         p[0] = p[1] + p[2] + p[3]
     elif(p.length == 1):
         p[0] = p[1]
-
+    return p[0]
 
 #zero or more attributes, one or more attributes
 
-#[“Declarations”] [“Subprogram_Declarations”] [“Comp_Statement”]
+
+def p_empty(p):
+    '''
+  empty : " "
+    '''
+    p[0] = p[1]
+    return p[0]
+
+
+# 0 lub 1 declarations, 0 lub 1 subprogram declarations, 0 lub 1 comp statement
+def p_opt_declarations(p):
+    '''
+    opt_declarations : declarations
+    | empty
+    '''
+
+def p_opt_subprogram_declarations(p):
+    '''
+    opt_subprogram_declarations : subprogram_declarations
+    | empty
+    '''
+
+def p_opt_comp_statements(p):
+    '''
+    opt_comp_statements : comp_statements
+    | empty
+    '''
+
+
+
 def p_program_block(p):
     '''
 
-   program_block : declarations subprogram_declarations comp_statement
-   |
+   program_block : opt_declarations opt_subprogram_declarations opt_comp_statement
     :return:
     '''
 
 # “Declarations” ‘VAR’ “Id_List” ‘COL’ ”Type”
 def p_declarations(p):
     '''
-
-    :param p:
-    :return:
+    declarations : declarations VAR id_list COL type
+    | VAR id_list COL type
     '''
 
 
@@ -178,19 +204,19 @@ def p_signed_integer(p):
         p[0] = p[1] + p[2]
     return p[0]
 
+
+#Subprogram_Declarations→ {”Subprogram_Declarations” “Subprogram_Declaration”} ‘SEMICOL’
 def p_subprogram_declarations(p):
     '''
-
-    :param p:
-    :return:
+    subprogram_declarations : subprogram_declarations subprogram_declaration SEMICOL
+    | subprogram_declaration
     '''
 
 
 def p_subprogram_declaration(p):
     '''
     subprogram_declaration : subprogram_head declarations compound_statement
-    :param p:
-    :return:
+    | empty
     '''
 
 
@@ -204,6 +230,7 @@ def p_subprogram_head(p):
         p[0] = p[1] + p[2] + p[3] + p[4] + p[5]
     elif(p.length == 3):
         p[0] = p[1] + p[2] + p[3]
+    return p[0]
 
 
 def p_standard_type(p):
@@ -212,16 +239,16 @@ def p_standard_type(p):
     | REAL
     '''
     p[0] = p[1]
-
+    return p[0]
 
 
 def p_sign(p):
     '''
     sign : PLUS
     | MINUS
-
     '''
     p[0] = p[1]
+    return p[0]
 
 def p_logic_operator(p):
     '''
@@ -229,24 +256,29 @@ def p_logic_operator(p):
     | AND
     '''
     p[0] = p[1]
+    return p[0]
+
 def p_logic_statement(p):
     '''
     logic_statement : comparison
     | BOOLEAN
     '''
     p[0] = p[1]
+    return p[0]
 
 def p_function_id(p):
     '''
     function_id : ID
     '''
     p[0] = p[1]
+    return p[0]
 
 def p_arguments(p):
     '''
     arguments: LP parameter_list RP
     '''
     p[0] = p[1] + [p[2]] + p[3]
+    return p[0]
 
 
 def p_parameter_list(p):
@@ -255,6 +287,7 @@ def p_parameter_list(p):
     parameter_list : id_list COL type
     '''
     p[0] = [p[1]] + p[2] + p[3]
+    return p[0]
 
 
 
@@ -263,12 +296,14 @@ def p_comp_statement(p):
     comp_statement : BEGIN optional_statements END
     '''
     p[0] = p[1] + p[2] + p[3]
+    return p[0]
 
 def p_optional_statements(p):
     '''
-    optional_statements : statements_list    #pasowaloby tu dac listy
+    optional_statements : statements_list
     '''
-    [p[0]] = [p[1]]
+    p[0] = p[1]
+    return p[0]
 
 def p_statement_list(p):
     '''
@@ -277,9 +312,10 @@ def p_statement_list(p):
     | statement_list SEMICOL statement
     '''
     if(p.length == 1):
-        [p[0]] == [p[1]]
+        p[0] = p[1]
     elif(p.length == 3):
-        p[0] == [p[1]] + p[2] + p[3]
+        p[0] = p[1] + p[2] + p[3]
+    return p[0]
 
 def p_variable(p):
     '''
@@ -289,7 +325,8 @@ def p_variable(p):
     if(p.length == 1):
         p[0] = p[1]
     elif(p.length == 4):
-        p[0] == p[1] + p[2] + p[3] +p[4]
+        p[0] = p[1] + p[2] + p[3] +p[4]
+    return p[0]
 
 def p_statement(p):
     '''
@@ -301,6 +338,7 @@ def p_statement(p):
     '''
     if(p.length == 3):
         p[0] = p[1]
+    return p[0]
 
 def p_procedure_statement(p):
     '''
@@ -311,6 +349,7 @@ def p_procedure_statement(p):
         p[0]= p[1]
     elif(p.length == 4):
         p[0] = p[1] + p[2] + [p[3]] + p[4]
+    return p[0]
 
 
 def p_expression(p):
@@ -321,16 +360,20 @@ def p_expression(p):
     if(p.length == 1):
         p[0] = p[1]
     elif (p.length == 3):
-        p[0] == p[1] + p[2] + p[3]
+        p[0] = p[1] + p[2] + p[3]
+    return p[0]
 
 
-
+#{“Expression”} |{ “Expression_List” ‘COMA’ “Expression”}
 def p_expression_list(p):
     '''
-
-    :param p:
-    :return:
+    expression_list : expression
+    | expression_list COMA expression
     '''
+    if(p.length == 1):
+        p[0] = p[1]
+    elif(p.length == 3):
+        p[0] = p[1] + p[2] + p[3]
 
 
 def p_for(p):
