@@ -93,9 +93,16 @@ def t_error(t):
 lexer = lex.lex()
 
 
-
+#“Program_Id” ['LBR' “Id_List” 'RBR'] ‘SEMICOL’ “Program_Block” ‘DOT’
 def p_pascal_program(p):
-    '''  '''
+    '''
+    program_id LBR id_list RBR SEMICOL program_block DOT
+    | program_id SEMICOL program_block DOT
+    '''
+    if(p.length == 7 ):
+        p[0] = p[1] + p[2] + p[3] + p[4] + p[5] + p[6] + p[7]
+    elif(p.length == 4):
+        p[0] = p[1] + p[2] + p[3] + p[4]
 
 
 def p_program_id(p):
@@ -105,22 +112,30 @@ def p_program_id(p):
     p[0] = p[1] + p[2]
 
 
+#Id_List → ‘ID’ | Id_List ‘COMA’ ‘ID’
 def p_id_list(p):
     '''
-
-    :param p:
-    :return:
+    id_list : id_list COMA ID
+    | ID
     '''
+    if(p.length == 3):
+        p[0] = p[1] + p[2] + p[3]
+    elif(p.length == 1):
+        p[0] = p[1]
 
 
+#zero or more attributes, one or more attributes
+
+#[“Declarations”] [“Subprogram_Declarations”] [“Comp_Statement”]
 def p_program_block(p):
     '''
 
    program_block : declarations subprogram_declarations comp_statement
+   |
     :return:
     '''
 
-
+# “Declarations” ‘VAR’ “Id_List” ‘COL’ ”Type”
 def p_declarations(p):
     '''
 
@@ -138,6 +153,7 @@ def p_type(p):
         p[0] = p[1]
     elif(p.length == 9):
         p[0] = p[1] + p[2] + p[3] + p[4] + p[5] + p[6] + p[7] + p[8] + p[9]
+    return p[0]
 
 def p_num(p):
     '''
@@ -148,6 +164,7 @@ def p_num(p):
         p[0] = p[1]
     elif(p.length == 3):
         p[0] = p[1] + p[2] + p[3]
+    return p[0]
 
 
 def p_signed_integer(p):
@@ -159,7 +176,7 @@ def p_signed_integer(p):
         p[0] = p[1]
     elif(p.length == 2):
         p[0] = p[1] + p[2]
-
+    return p[0]
 
 def p_subprogram_declarations(p):
     '''
