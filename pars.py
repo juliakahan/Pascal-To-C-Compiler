@@ -91,7 +91,6 @@ def t_error(t):
 lexer = lex.lex()
 
 
-#“Program_Id” ['LBR' “Id_List” 'RBR'] ‘SEMICOL’ “Program_Block” ‘DOT’
 def p_pascal_program(p):
     '''
     program_id LBR id_list RBR SEMICOL program_block DOT
@@ -111,7 +110,7 @@ def p_program_id(p):
     p[0] = p[1] + p[2]
     return p[0]
 
-#Id_List → ‘ID’ | Id_List ‘COMA’ ‘ID’
+
 def p_id_list(p):
     '''
     id_list : id_list COMA ID
@@ -123,8 +122,8 @@ def p_id_list(p):
         p[0] = p[1]
     return p[0]
 
-#zero or more attributes, one or more attributes
 
+#==================================================some helpful grammar definitions============================================
 
 def p_empty(p):
     '''
@@ -134,40 +133,52 @@ def p_empty(p):
     return p[0]
 
 
-# 0 lub 1 declarations, 0 lub 1 subprogram declarations, 0 lub 1 comp statement
+
 def p_opt_declarations(p):
     '''
     opt_declarations : declarations
     | empty
     '''
+    p[0] = p[1]
+    return p[0]
 
 def p_opt_subprogram_declarations(p):
     '''
     opt_subprogram_declarations : subprogram_declarations
     | empty
     '''
+    p[0] = p[1]
+    return p[0]
 
 def p_opt_comp_statements(p):
     '''
     opt_comp_statements : comp_statements
     | empty
     '''
+    p[0] = p[1]
+    return p[0]
 
-
+#======================================================================================================================================================
 
 def p_program_block(p):
     '''
 
    program_block : opt_declarations opt_subprogram_declarations opt_comp_statement
-    :return:
     '''
+    p[0] = p[1] + p[2] + p[3]
+    return p[0]
 
-# “Declarations” ‘VAR’ “Id_List” ‘COL’ ”Type”
+
 def p_declarations(p):
     '''
     declarations : declarations VAR id_list COL type
     | VAR id_list COL type
     '''
+    if (p.length == 5):
+        p[0] = p[1] + p[2] + p[3] +p[4] + p[5]
+    elif (p.length == 4):
+        p[0] = p[1] + p[2] + p[3] +p[4]
+    return p[0]
 
 
 def p_type(p):
@@ -205,20 +216,27 @@ def p_signed_integer(p):
     return p[0]
 
 
-#Subprogram_Declarations→ {”Subprogram_Declarations” “Subprogram_Declaration”} ‘SEMICOL’
 def p_subprogram_declarations(p):
     '''
     subprogram_declarations : subprogram_declarations subprogram_declaration SEMICOL
     | subprogram_declaration
     '''
-
+    if (p.length == 3):
+        p[0] = p[1] + p[2] + p[3]
+    elif (p.length == 1):
+        p[0] = p[1]
+    return p[0]
 
 def p_subprogram_declaration(p):
     '''
     subprogram_declaration : subprogram_head declarations compound_statement
     | empty
     '''
-
+    if (p.length == 3):
+        p[0] = p[1] + p[2] + p[3]
+    elif (p.length == 1):
+        p[0] = p[1]
+    return p[0]
 
 def p_subprogram_head(p):
     '''
@@ -288,7 +306,6 @@ def p_parameter_list(p):
     '''
     p[0] = [p[1]] + p[2] + p[3]
     return p[0]
-
 
 
 def p_comp_statement(p):
@@ -364,7 +381,6 @@ def p_expression(p):
     return p[0]
 
 
-#{“Expression”} |{ “Expression_List” ‘COMA’ “Expression”}
 def p_expression_list(p):
     '''
     expression_list : expression
@@ -374,54 +390,110 @@ def p_expression_list(p):
         p[0] = p[1]
     elif(p.length == 3):
         p[0] = p[1] + p[2] + p[3]
+    return p[0]
 
+def p_to_expression(p):
+    '''
+    to_expression : TO
+    | DOWNTO
+    '''
+    p[0]=p[1]
+    return p[0]
 
 def p_for(p):
     '''
-
-    :param p:
-    :return:
+    for : FOR ID ASSIG expression to_expression expression
     '''
+    p[0] = p[1] + p[2] + p[3] + p[4] + p[5] + p[6]
+    return p[0]
 
 
 def p_simple_expression(p):
     '''
-
-    :param p:
-    :return:
+    simple_expression : term
+    | sign term
+    | simple_expression PLUS term
     '''
+    if(p.length == 1):
+        p[0] = p[1]
+    elif(p.length == 2):
+        p[0] = p[1] + p[2]
+    elif(p.length == 3):
+        p[0] = p[1] + p[2] + p[3]
+    return p[0]
 
 
 def p_term(p):
     '''
-
-    :param p:
-    :return:
+    term : factor
+    |term MULTIPLY factor
     '''
+    if(p.length == 1):
+        p[0] = p[1]
+    elif(p.length == 3):
+        p[0] = p[1] + p[2] + p[3]
+    return p[0]
 
 
 def p_factor(p):
     '''
-
-    :param p:
-    :return:
+    factor : ID
+    | ID LP expression_list RP
+    | num
+    | LP expression RP
+    | NOT factor
     '''
+    if(p.length == 1):
+        p[0] = p[1]
+    elif(p.length == 2):
+        p[0] = p[1] + p[2]
+    elif(p.length == 3):
+        p[0] = p[1] + p[2] + p[3]
+    elif(p.lentgh == 4):
+        p[0] = p[1] + p[2] + p[3] + p[4]
+    return p[0]
 
+
+def p_comp_operator(p):
+    '''
+    comp_operator : LT
+    | GT
+    | LOREQ
+    | GOREQ
+    | EQ
+    '''
+    p[0] = p[1]
+    return p[0]
 
 def p_comparison(p):
     '''
-
-    :param p:
-    :return:
+    comparison : num comp_operator num
     '''
+    p[0] = p[1] + p[2] + p[3]
+    return p[0]
 
+def p_statement_logic_operators(p):
+    '''
+    statement_logic_operators : logic_operator
+    | AND THEN
+    | OR ELSE
+    '''
+    if(p.length == 1):
+        p[0] = p[1]
+    elif(p.length == 2):
+        p[0] = p[1] + p[2]
+    return p[0]
 
 def p_logic_condition(p):
     '''
-
-    :param p:
-    :return:
+    logic_condition : NOT LP logic_statement statement_logic_operators logic_statement RP
+    | LP logic_statement statement_logic_operators logic_statement RP
     '''
+    if(p.length == 6):
+        p[0] = p[1] + p[2] + p[3] + p[4] + p[5] + p[6]
+    elif(p.length == 5):
+        p[0] = p[1] + p[2] + p[3] + p[4] + p[5]
+    return p[0]
 
 
 yacc.yacc()
