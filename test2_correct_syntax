@@ -1,0 +1,9 @@
+VAR
+MyAge    : Byte;
+Comments : String;
+BEGIN
+MyAge:=22;
+Comments:='Hi, there ! I'm learning Pascal';
+Writeln('I am ',MyAge,' years old');
+Writeln(Comments);
+END.

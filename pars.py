@@ -100,7 +100,7 @@ def p_pascal_program(p):
         p[0] = p[1] + p[2] + p[3] + p[4] + p[5] + p[6] + p[7]
     elif(p.length == 4):
         p[0] = p[1] + p[2] + p[3] + p[4]
-    return p[0]
+
 
 
 def p_program_id(p):
@@ -496,4 +496,5 @@ def p_logic_condition(p):
     return p[0]
 
 
-yacc.yacc()
+parser = yacc.yacc()
+

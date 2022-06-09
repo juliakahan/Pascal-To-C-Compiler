@@ -78,4 +78,12 @@ def t_error(t):
     t.lexer.skip(1)
 
 
+
 lexer = lex.lex()
+
+# with open('test.txt') as f:
+#     lines = f.readlines()
+#
+# content = "".join(lines)
+#
+# lexer.input(content)
