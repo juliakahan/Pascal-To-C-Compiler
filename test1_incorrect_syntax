@@ -1,5 +1,4 @@
-(* Convert  Celsius temperature to Fahrenheit *)
-VAR
+var
 Celsius,  Fahrenheit: REAL;
 BEGIN
 Write('Enter  Degrees C: ');

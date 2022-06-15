@@ -1,9 +1,9 @@
 VAR
-MyAge    : Byte;
-Comments : String;
+MyAge    : BYTE;
+Comments : STRING;
 BEGIN
 MyAge:=22;
 Comments:='Hi, there ! I'm learning Pascal';
-Writeln('I am ',MyAge,' years old');
-Writeln(Comments);
+WRITELN('I am ',MyAge,' years old');
+WRITELN(Comments);
 END.
