@@ -1,16 +1,68 @@
 from ply import lex
 from ply import yacc
 
+
+reserved = {
+    'and': 'AND',
+    'array': 'ARRAY',
+    'begin': 'BEGIN',
+    'case': 'CASE',
+    'const': 'CONST',
+    'div': 'DIV',
+    'do': 'DO',
+    'downto': 'DOWNTO',
+    'else': 'ELSE',
+    'end': 'END',
+    'file': 'FILE',
+    'for': 'FOR',
+    'function': 'FUNCTION',
+    'goto': 'GOTO',
+    'if': 'IF',
+    'in': 'IN',
+    'label': 'LABEL',
+    'mod': 'MOD',
+    'nil': 'NIL',
+    'not': 'NOT',
+    'of': 'OF',
+    'or': 'OR',
+    'procedure': 'PROCEDURE',
+    'program': 'PROGRAM',
+    'record': 'RECORD',
+    'repeat': 'REPEAT',
+    'set': 'SET',
+    'then': 'THEN',
+    'to': 'TO',
+    'type': 'TYPE',
+    'until': 'UNTIL',
+    'var': 'VAR',
+    'while': 'WHILE',
+    'with': 'WITH',
+    'eof': 'EOF',
+    'eoln': 'EOLN',
+    'false': 'FALSE',
+    'true': 'TRUE',
+    'input': 'INPUT',
+    'output': 'OUTPUT',
+    'get': 'GET',
+    'put': 'PUT',
+    'readln': 'READLN',
+    'read': 'READ',
+    'write': 'WRITE',
+    'writeln': 'WRITELN',
+    'lineend': 'LINEEND',
+    'sqrt': 'SQRT',
+    'text': 'TEXT',
+    'dispose': 'DISPOSE',
+    'integer': 'INTEGER',
+    'char': 'CHAR',
+    'real': 'REAL',
+    'boolean': 'BOOLEAN',
+
+}
 tokens = [
 
-    # reserved
-    'AND', 'ARRAY', 'BEGIN', 'CASE', 'CONST', 'DIV', 'DO', 'DOWNTO', 'ELSE', 'END', 'FILE', 'FOR', 'FUNCTION',
-    'GOTO', 'IF', 'IN', 'LABEL', 'MOD', 'NIL', 'NOT', 'OF', 'OR', 'PROCEDURE', 'PROGRAM', 'RECORD', 'REPEAT',
-    'SET', 'THEN', 'TO', 'TYPE', 'UNTIL', 'VAR', 'WHILE', 'WITH', 'EOF', 'EOLN', 'FALSE', 'TRUE', 'INPUT',
-    'OUTPUT', 'GET', 'PUT', 'READLN', 'READ', 'WRITE', 'WRITELN', 'LINEEND', 'SQRT', 'TEXT', 'DISPOSE',
-
     # literals
-    'ID', 'INTEGER', 'CHAR', 'REAL', 'BOOLEAN', 'EMPTY',
+    'EMPTY', 'ID',
 
     # opertators
     'PLUS', 'MINUS', 'MULTIPLY', 'DIVIDE', 'EQ', 'LT', 'GT', 'DOT',
@@ -18,9 +70,9 @@ tokens = [
     'GOREQ', 'ASSIG', 'INCRBY', 'DECRBY', 'MULTBY', 'DIVBY',
 
     # delimeters
-    'LP', 'RP', 'LBR', 'RBR', 'SEMICOL', 'COL', 'LCURLBR', 'RCURLBR',
+    'LP', 'RP', 'LBR', 'RBR', 'SEMICOL', 'COL', 'LCURLBR', 'RCURLBR', 'NEWLINE'
 
-]
+] + list(reserved.values())
 #'LCOMM', 'RCOMM', 'LGROUP', 'RGROUP',
 #, 'EXPON'
 # Operators
@@ -65,22 +117,25 @@ t_RCURLBR = r'\}'
 # t_RGROUP = r'\.)'
 
 # ID
-t_ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
+#t_ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
 # INTEGER
 t_INTEGER = r'^[1-9][0-9]*|0$'
 # CHAR
-t_CHAR = r'(L)?\'([^\\\n]|(\\.))*?\''
+t_CHAR= r'(L)?\'([^\\\n]|(\\.))*?\''
 # REAL
 t_REAL = r'((\+|-)?([0-9]+)(\.[0-9]+)?)|((\+|-)?\.?[0-9]+)'
 # BOOLEAN
 t_BOOLEAN = r'(true|false)'
 t_EMPTY = r'""'
+t_NEWLINE = r'\n+'
 
-def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = 'VAR'  # Check for reserved words if not in reserved words than its VAR
+    return t
 
-    # A string containing ignored characters (spaces and tabs)
+
+# A string containing ignored characters (spaces and tabs)
 t_ignore = ' '
 
 
@@ -91,10 +146,8 @@ def t_error(t):
 
 
 lexer = lex.lex()
-
 with open('test1_correct_syntax') as f:
     lines = f.readlines()
-
 content = "".join(lines)
 
 lexer.input(content)
@@ -102,9 +155,10 @@ lexer.input(content)
 
 # lexer = lex.lex()
 c_Code = ""
-elements = {}
-num_of_tabs = 0
-inClass = False
+
+def p_empty(p):
+    '''empty : '''
+    p[0] = ""
 
 def p_pascal_program(p):
     '''
@@ -141,19 +195,12 @@ def p_id_list(p):
 
 #==================================================some helpful grammar definitions============================================
 
-# def p_empty(p):
-#     '''
-#   empty : " "
-#     '''
-#     p[0] = p[1]
-
-
 
 
 def p_opt_declarations(p):
     '''
     opt_declarations : declarations
-        | EMPTY
+        | empty
     '''
     p[0] = p[1]
 
@@ -187,13 +234,13 @@ def p_program_block(p):
 
 def p_declarations(p):
     '''
-    declarations : declarations VAR id_list COL type
-    | VAR id_list COL type
+    declarations : declarations VAR NEWLINE id_list COL type
+    | VAR NEWLINE id_list COL type
     '''
-    if (p.length == 5):
-        p[0] = p[1] + [2] + '\n' + p[3] +p[4] + p[5]
-    elif (p.length == 4):
-        p[0] = p[1] + '\n' + p[2] + p[3] +p[4]
+    if (p.length == 6):
+        p[0] = p[1] + [2] + p[3] + p[4] + p[5] + p[6]
+    elif (p.length == 5):
+        p[0] = p[1] + p[2] + p[3] + p[4] +p[5]
 
 
 
@@ -497,6 +544,10 @@ def p_statement_logic_operators(p):
     elif(p.length == 2):
         p[0] = p[1] + p[2]
 
+def p_error(p):
+    print("Syntax error at '%s'\n" % p.value)
+    global wasError
+    wasError = True
 
 def p_logic_condition(p):
     '''

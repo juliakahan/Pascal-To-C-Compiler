@@ -1,4 +1,4 @@
-VAR
+var
 Celsius,Fahrenheit: REAL;
 BEGIN
 Celsius:=25;
