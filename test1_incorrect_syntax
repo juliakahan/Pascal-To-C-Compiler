@@ -1,8 +1,9 @@
+program cel
 var
-Celsius,  Fahrenheit: REAL;
-BEGIN
-Write('Enter  Degrees C: ');
-Read(Celsius);
+Celsius,  Fahrenheit: real;
+begin
+write('Enter  Degrees C: ');
+read(Celsius);
 Fahrenheit :=  (9.0 / 5.0) * Celsius + 32.0;
-Write('Fahrenheit  is ');
-Write(ROUND(Fahrenheit));
+write('Fahrenheit  is ');
+writeFahrenheit);
