@@ -162,11 +162,11 @@ def t_error(t):
 
 lexer = lex.lex()
 
-# with open('test1_correct_syntax') as f:
-#     lines = f.readlines()
-# content = "".join(lines)
-#
-# lexer.input(content)
+with open('test1_correct_syntax') as f:
+    lines = f.readlines()
+content = "".join(lines)
+
+lexer.input(content)
 
 
 
@@ -175,13 +175,12 @@ ID_list = []
 declar = []
 subprogram_decl = []
 comp_stats = []
+list_statement = []
 
 
 
 
-def p_empty(p):
-    '''empty :'''
-    pass
+
 
 def p_pascal_program(p):
     '''
@@ -190,9 +189,9 @@ def p_pascal_program(p):
 
     global output
 
-    # if(p.length == 7 ):
+    # if(len(p == 7 ):
     #     p[0] = p[1] + p[2] + p[3] + p[4] + p[5] + p[6] + p[7]
-    # elif(p.length == 4):
+    # elif(len(p == 4):
     #     p[0] = p[1] + p[2] + p[3] + p[4]
     # global c_Code
     # c_Code = p[0]
@@ -203,20 +202,21 @@ def p_program_id(p):
     '''
     program_id : PROGRAM ID
      '''
-    global outputstr
-    outputstr += "//Program: " + p[2] + "\n"
-    outputstr += "#include <stdio.h>\n"
+    global output
+    output += "//Program: " + p[2] + "\n"
+    output += "#include <stdio.h>\n"
+
 
 
 
 
 def p_id_list(p):
     '''
-    id_list : id_list COMA ID
-    | ID
-    '''
+        id_list : id_list COMA ID
+        | ID
+        '''
     global output
-    if(p.length == 3):
+    if (p.length == 3):
         for id in [p[1]]:
             ID_list.append(id)
             if [p[len(p) - 1]] == id:
@@ -224,10 +224,15 @@ def p_id_list(p):
             else:
                 output += id + ","
 
-
-    elif(p.length == 1):
+    elif (p.length == 1):
         ID_list.append(p[1])
         output += p[1]
+
+
+
+
+
+
 
 
 
@@ -238,7 +243,7 @@ def p_id_list(p):
 def p_opt_declarations(p):
     '''
     opt_declarations : declarations
-    | empty
+    | EMPTY
     '''
     pass
 
@@ -269,12 +274,12 @@ def p_program_block(p):
 
 def p_declarations(p):
     '''
-    declarations : VAR id_list COL type
-    | empty
+    declarations : VAR id_list COL type SEMICOL
+    | opt_declarations
     '''
     global output
 
-    if(p.length == 5):
+    if(len(p) == 5):
         output += ID_list[0].type
         for id in ID_list:
             if ID_list[len(ID_list) - 1] == id:
@@ -298,7 +303,7 @@ def p_num(p):
     | signed_integer DOT INTEGER
     '''
     global output
-    if p.length == 1:
+    if len(p) == 1:
         output += p[1]
     else:
         output += p[1] + p[2] + p[3]
@@ -308,6 +313,7 @@ def p_num(p):
 def p_signed_integer(p):
     '''
     signed_integer : MINUS INTEGER
+    | INTEGER
     '''
     global output
     output += "-" + p[2]
@@ -327,9 +333,9 @@ def p_subprogram_declaration(p):
     subprogram_declaration : subprogram_head declarations comp_statement
 
     '''
-    if (p.length == 3):
+    if (len(p) == 3):
         p[0] = p[1] + p[2] + p[3]
-    elif (p.length == 1):
+    elif (len(p) == 1):
         p[0] = p[1]
 
 
@@ -386,8 +392,8 @@ def p_function_id(p):
     '''
     function_id : ID
     '''
-    global outputstr
-    outputstr += p[1] + " "
+    global output
+    output += p[1] + " "
 
 
 def p_arguments(p):
@@ -420,6 +426,7 @@ def p_comp_statement(p):
     '''
     global output
     output += p[2]
+    print("atu")
 
 
 def p_optional_statements(p):
@@ -435,10 +442,13 @@ def p_statement_list(p):
     statement_list : statement
     | statement_list SEMICOL statement
     '''
-    if(p.length == 1):
-        p[0] = p[1]
-    elif(p.length == 3):
-        p[0] = p[1] + p[2] + p[3]
+    if p[1] is not None:
+        ID_list.append(p[1])
+
+    else:
+        ID_list.append(p[3])
+
+
 
 
 def p_variable(p):
@@ -447,10 +457,12 @@ def p_variable(p):
     | ID LBR expression RBR
     '''
     global output
-    if(p.length == 1):
+    if(len(p) == 1):
         output += p[1]
-    elif(p.length == 4):
+    elif(len(p) == 4):
         output += p[1] + " (" + p[3] + ") "
+
+    print("variable")
 
 
 def p_statement(p):
@@ -462,7 +474,7 @@ def p_statement(p):
     | WHILE expression DO statement
     '''
     global output
-    if p.length == 3:
+    if len(p) == 3:
         output += p[1] + " = " + p[3]
     if p[1] == 'if':
         output += p[1] + " ( " + p[2] + " ) \n" + " { \n" + p[4] + "\n"  + "}\n" +  p[5] + " { \n" + p[6] + "\n"  + "}\n"
@@ -476,7 +488,7 @@ def p_procedure_statement(p):
     | ID LP expression_list RP
     '''
     global output
-    if(p.length == 1):
+    if(len(p) == 1):
         output += p[1]
 
 
@@ -487,11 +499,11 @@ def p_simple_expression(p):
     | term
     '''
     global output
-    if(p.length == 1):
+    if(len(p) == 1):
         output += p[1]
-    elif(p.length == 2):
+    elif(len(p) == 2):
         output += p[1] + p[2]
-    elif(p.length == 3):
+    elif(len(p) == 3):
        output += p[1] + p[2] + p[3]
 
 def p_expression(p):
@@ -500,10 +512,10 @@ def p_expression(p):
     | simple_expression
     '''
     global output
-    if(p.length == 1):
+    if(len(p) == 1):
         for var in p[1]:
             output += var + " "
-    elif (p.length == 3):
+    elif (len(p) == 3):
         for var in p[1]:
             output += var + " "
         output += " = "
@@ -518,9 +530,9 @@ def p_expression_list(p):
     | expression_list COMA expression
     '''
     global output
-    if(p.length == 1):
+    if(len(p) == 1):
         output += p[1]
-    elif(p.length == 3):
+    elif(len(p) == 3):
         output += p[1] + p[2] + p[3]
 
 
@@ -547,9 +559,9 @@ def p_term(p):
     | term MULTIPLY factor
     '''
     global output
-    if(p.length == 1):
+    if(len(p) == 1):
         output += p[1]
-    elif(p.length == 3):
+    elif(len(p) == 3):
         output += p[1] + " * " + p[3]
 
 
@@ -563,11 +575,11 @@ def p_factor(p):
     | NOT factor
     '''
     global output
-    if(p.length == 1):
+    if(len(p) == 1):
         output += p[1]
-    elif(p.length == 2):
+    elif(len(p) == 2):
         output += p[1] + p[2]
-    elif(p.length == 3):
+    elif(len(p) == 3):
         output += "(" + p[1] + p[2] + ")"
 
 
@@ -601,9 +613,9 @@ def p_statement_logic_operators(p):
     '''
     global output
 
-    if(p.length == 1):
+    if(len(p) == 1):
         output += p[1]
-    elif(p.length == 2):
+    elif(len(p) == 2):
         output += p[1] + " " + p[2]
 # def p_error(p):
 #     print("Syntax error at '%s'\n" % p.value)
@@ -616,11 +628,13 @@ def p_logic_condition(p):
     | LP logic_statement statement_logic_operators logic_statement RP
     '''
     global output
-    if(p.length == 6):
+    if(len(p) == 6):
         output += "! " + p[2] + p[3] + p[4] + p[5] + p[6]
-    elif(p.length == 5):
+    elif(len(p) == 5):
         output += p[1] + p[2] + p[3] + p[4] + p[5]
 
+def p_error(p):
+    raise Exception("Syntax error at '{}' at line: {}.\n".format(p.value,p.lexer.lineno))
 
 global output
 output = ""
@@ -634,16 +648,4 @@ with open('test1_out.txt', 'w') as file:
 
 
 
-# global output
-# output = ""
-# lexer = lex.lex()
-# with open('test1_correct_syntax', 'r') as file:
-#     data = file.read()
-# lexer.input(data)
-# for token in lexer:
-#     print("line %d: %s(%s)" %(token.lineno, token.type, token.value))
 #
-# parser = yacc.yacc()
-# result = parser.parse(data)
-# with open('test1_out.txt', 'w') as file:
-#     file.write(output)
