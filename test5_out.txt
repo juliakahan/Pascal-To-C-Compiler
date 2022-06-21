@@ -1,0 +1,9 @@
+#include <stdio.h>
+int main() {
+int a;
+int b;
+for(a=10;a<=20;++a){
+	b = b+a;
+	}
+return 0; 
+}

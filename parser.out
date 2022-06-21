@@ -1,0 +1,2326 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    ARRAY
+    BINLSO
+    BINRSO
+    CASE
+    CONST
+    DECRBY
+    DISPOSE
+    DIVBY
+    DIVIDE
+    DOLLAR
+    EMPTY
+    EOF
+    EOLN
+    FILE
+    FUNCTION
+    GET
+    GOTO
+    HASH
+    IN
+    INCRBY
+    INPUT
+    ISDIFF
+    LABEL
+    LCURLBR
+    LINEEND
+    MOD
+    MULTBY
+    MULTIPLY
+    NIL
+    OF
+    OUTPUT
+    PUT
+    RCURLBR
+    READ
+    READLN
+    RECORD
+    REF
+    REPEAT
+    SET
+    SQRT
+    SYMMDIFF
+    UNTIL
+    WHILE
+    WITH
+    WRITE
+    WRITELN
+
+Grammar
+
+Rule 0     S' -> pascal_program
+Rule 1     pascal_program -> program_id SEMICOL program_block DOT
+Rule 2     program_id -> PROGRAM ID
+Rule 3     program_block -> declared_type_block variable_block procedure_block operation_block
+Rule 4     declared_type_block -> TYPE id_list
+Rule 5     declared_type_block -> empty
+Rule 6     variable_block -> VAR var_decl var_decl_list
+Rule 7     variable_block -> empty
+Rule 8     var_decl -> id_list COL type_denoter SEMICOL
+Rule 9     var_decl_list -> var_decl_list var_decl
+Rule 10    var_decl_list -> empty
+Rule 11    id_list -> ID
+Rule 12    id_list -> id_list COMA ID
+Rule 13    procedure_block -> procedure_block procedure
+Rule 14    procedure_block -> empty
+Rule 15    procedure -> procedure_header SEMICOL program_block SEMICOL
+Rule 16    procedure_header -> PROCEDURE ID
+Rule 17    procedure_header -> PROCEDURE ID LP parameters parameters_list RP
+Rule 18    parameters -> id_list COL stand_type_procedure
+Rule 19    parameters_list -> parameters_list SEMICOL parameters
+Rule 20    parameters_list -> empty
+Rule 21    stand_type_procedure -> CHAR
+Rule 22    stand_type_procedure -> INTEGER
+Rule 23    stand_type_procedure -> REAL
+Rule 24    stand_type_procedure -> BOOLEAN
+Rule 25    type_denoter -> stand_type
+Rule 26    type_denoter -> id1
+Rule 27    var_decl2 -> ID
+Rule 28    var_decl2 -> id_list COMA ID
+Rule 29    sign -> PLUS
+Rule 30    sign -> MINUS
+Rule 31    real_number -> num
+Rule 32    real_number -> num dot num
+Rule 33    num -> NUMBER
+Rule 34    dot -> DOT
+Rule 35    types -> stand_type
+Rule 36    types -> id1
+Rule 37    stand_type -> CHAR
+Rule 38    stand_type -> INTEGER
+Rule 39    stand_type -> REAL
+Rule 40    stand_type -> BOOLEAN
+Rule 41    stand_type -> TEXT
+Rule 42    end_sign -> END
+Rule 43    statement_sequence -> statement statement_list
+Rule 44    statement_list -> statement_list SEMICOL statement
+Rule 45    statement_list -> empty
+Rule 46    variable -> ID
+Rule 47    variable -> ID LBR expression RBR
+Rule 48    assign_statement -> id2 ASSIG expression
+Rule 49    statement -> simple_statement
+Rule 50    statement -> structured_statement
+Rule 51    statement -> for_statement
+Rule 52    simple_statement -> assign_statement
+Rule 53    simple_statement -> empty
+Rule 54    structured_statement -> operation_sub_block
+Rule 55    structured_statement -> conditional_statement
+Rule 56    structured_statement -> loop_statement
+Rule 57    loop_statement -> for_do
+Rule 58    for_statement -> for_id ASSIG expression to_downto expression for_do statement
+Rule 59    comp_statement -> BEGIN statement_sequence SEMICOL END
+Rule 60    operation_block -> BEGIN statement_sequence END
+Rule 61    conditional_statement -> if_part expression then_part statement else_part
+Rule 62    conditional_statement -> if_part expression then_part statement
+Rule 63    if_part -> IF
+Rule 64    then_part -> THEN
+Rule 65    bool_value -> TRUE
+Rule 66    bool_value -> FALSE
+Rule 67    else_part -> else statement
+Rule 68    else -> ELSE
+Rule 69    id1 -> ID
+Rule 70    id2 -> ID
+Rule 71    id3 -> ID
+Rule 72    expression -> simple_expression comparison_operator simple_expression
+Rule 73    expression -> simple_expression
+Rule 74    expression -> bool_value
+Rule 75    operation_sub_block -> BEGIN statement_sequence END
+Rule 76    for_id -> FOR ID
+Rule 77    to_downto -> TO
+Rule 78    to_downto -> DOWNTO
+Rule 79    for_do -> DO
+Rule 80    comparison_operator -> LT
+Rule 81    comparison_operator -> GT
+Rule 82    comparison_operator -> LOREQ
+Rule 83    comparison_operator -> GOREQ
+Rule 84    comparison_operator -> EQ
+Rule 85    simple_expression -> term additional_oper_list
+Rule 86    additional_oper_list -> additional_oper_list additional_oper term
+Rule 87    additional_oper_list -> empty
+Rule 88    additional_oper -> MINUS
+Rule 89    additional_oper -> PLUS
+Rule 90    additional_oper -> OR
+Rule 91    term -> factor factor_list
+Rule 92    factor_list -> factor_list and_div_oper factor
+Rule 93    factor_list -> empty
+Rule 94    and_div_oper -> DIV
+Rule 95    and_div_oper -> AND
+Rule 96    factor -> real_number
+Rule 97    factor -> ID
+Rule 98    factor -> LP expression RP
+Rule 99    factor -> NOT factor
+Rule 100   empty -> <empty>
+Rule 101   comma -> COMA
+
+Terminals, with rules where they appear
+
+AND                  : 95
+ARRAY                : 
+ASSIG                : 48 58
+BEGIN                : 59 60 75
+BINLSO               : 
+BINRSO               : 
+BOOLEAN              : 24 40
+CASE                 : 
+CHAR                 : 21 37
+COL                  : 8 18
+COMA                 : 12 28 101
+CONST                : 
+DECRBY               : 
+DISPOSE              : 
+DIV                  : 94
+DIVBY                : 
+DIVIDE               : 
+DO                   : 79
+DOLLAR               : 
+DOT                  : 1 34
+DOWNTO               : 78
+ELSE                 : 68
+EMPTY                : 
+END                  : 42 59 60 75
+EOF                  : 
+EOLN                 : 
+EQ                   : 84
+FALSE                : 66
+FILE                 : 
+FOR                  : 76
+FUNCTION             : 
+GET                  : 
+GOREQ                : 83
+GOTO                 : 
+GT                   : 81
+HASH                 : 
+ID                   : 2 11 12 16 17 27 28 46 47 69 70 71 76 97
+IF                   : 63
+IN                   : 
+INCRBY               : 
+INPUT                : 
+INTEGER              : 22 38
+ISDIFF               : 
+LABEL                : 
+LBR                  : 47
+LCURLBR              : 
+LINEEND              : 
+LOREQ                : 82
+LP                   : 17 98
+LT                   : 80
+MINUS                : 30 88
+MOD                  : 
+MULTBY               : 
+MULTIPLY             : 
+NIL                  : 
+NOT                  : 99
+NUMBER               : 33
+OF                   : 
+OR                   : 90
+OUTPUT               : 
+PLUS                 : 29 89
+PROCEDURE            : 16 17
+PROGRAM              : 2
+PUT                  : 
+RBR                  : 47
+RCURLBR              : 
+READ                 : 
+READLN               : 
+REAL                 : 23 39
+RECORD               : 
+REF                  : 
+REPEAT               : 
+RP                   : 17 98
+SEMICOL              : 1 8 15 15 19 44 59
+SET                  : 
+SQRT                 : 
+SYMMDIFF             : 
+TEXT                 : 41
+THEN                 : 64
+TO                   : 77
+TRUE                 : 65
+TYPE                 : 4
+UNTIL                : 
+VAR                  : 6
+WHILE                : 
+WITH                 : 
+WRITE                : 
+WRITELN              : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+additional_oper      : 86
+additional_oper_list : 85 86
+and_div_oper         : 92
+assign_statement     : 52
+bool_value           : 74
+comma                : 
+comp_statement       : 
+comparison_operator  : 72
+conditional_statement : 55
+declared_type_block  : 3
+dot                  : 32
+else                 : 67
+else_part            : 61
+empty                : 5 7 10 14 20 45 53 87 93
+end_sign             : 
+expression           : 47 48 58 58 61 62 98
+factor               : 91 92 99
+factor_list          : 91 92
+for_do               : 57 58
+for_id               : 58
+for_statement        : 51
+id1                  : 26 36
+id2                  : 48
+id3                  : 
+id_list              : 4 8 12 18 28
+if_part              : 61 62
+loop_statement       : 56
+num                  : 31 32 32
+operation_block      : 3
+operation_sub_block  : 54
+parameters           : 17 19
+parameters_list      : 17 19
+pascal_program       : 0
+procedure            : 13
+procedure_block      : 3 13
+procedure_header     : 15
+program_block        : 1 15
+program_id           : 1
+real_number          : 96
+sign                 : 
+simple_expression    : 72 72 73
+simple_statement     : 49
+stand_type           : 25 35
+stand_type_procedure : 18
+statement            : 43 44 58 61 62 67
+statement_list       : 43 44
+statement_sequence   : 59 60 75
+structured_statement : 50
+term                 : 85 86
+then_part            : 61 62
+to_downto            : 58
+type_denoter         : 8
+types                : 
+var_decl             : 6 9
+var_decl2            : 
+var_decl_list        : 6 9
+variable             : 
+variable_block       : 3
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . pascal_program
+    (1) pascal_program -> . program_id SEMICOL program_block DOT
+    (2) program_id -> . PROGRAM ID
+
+    PROGRAM         shift and go to state 3
+
+    pascal_program                 shift and go to state 1
+    program_id                     shift and go to state 2
+
+state 1
+
+    (0) S' -> pascal_program .
+
+
+
+state 2
+
+    (1) pascal_program -> program_id . SEMICOL program_block DOT
+
+    SEMICOL         shift and go to state 4
+
+
+state 3
+
+    (2) program_id -> PROGRAM . ID
+
+    ID              shift and go to state 5
+
+
+state 4
+
+    (1) pascal_program -> program_id SEMICOL . program_block DOT
+    (3) program_block -> . declared_type_block variable_block procedure_block operation_block
+    (4) declared_type_block -> . TYPE id_list
+    (5) declared_type_block -> . empty
+    (100) empty -> .
+
+    TYPE            shift and go to state 8
+    VAR             reduce using rule 100 (empty -> .)
+    BEGIN           reduce using rule 100 (empty -> .)
+    PROCEDURE       reduce using rule 100 (empty -> .)
+
+    program_block                  shift and go to state 6
+    declared_type_block            shift and go to state 7
+    empty                          shift and go to state 9
+
+state 5
+
+    (2) program_id -> PROGRAM ID .
+
+    SEMICOL         reduce using rule 2 (program_id -> PROGRAM ID .)
+
+
+state 6
+
+    (1) pascal_program -> program_id SEMICOL program_block . DOT
+
+    DOT             shift and go to state 10
+
+
+state 7
+
+    (3) program_block -> declared_type_block . variable_block procedure_block operation_block
+    (6) variable_block -> . VAR var_decl var_decl_list
+    (7) variable_block -> . empty
+    (100) empty -> .
+
+    VAR             shift and go to state 12
+    BEGIN           reduce using rule 100 (empty -> .)
+    PROCEDURE       reduce using rule 100 (empty -> .)
+
+    variable_block                 shift and go to state 11
+    empty                          shift and go to state 13
+
+state 8
+
+    (4) declared_type_block -> TYPE . id_list
+    (11) id_list -> . ID
+    (12) id_list -> . id_list COMA ID
+
+    ID              shift and go to state 15
+
+    id_list                        shift and go to state 14
+
+state 9
+
+    (5) declared_type_block -> empty .
+
+    VAR             reduce using rule 5 (declared_type_block -> empty .)
+    BEGIN           reduce using rule 5 (declared_type_block -> empty .)
+    PROCEDURE       reduce using rule 5 (declared_type_block -> empty .)
+
+
+state 10
+
+    (1) pascal_program -> program_id SEMICOL program_block DOT .
+
+    $end            reduce using rule 1 (pascal_program -> program_id SEMICOL program_block DOT .)
+
+
+state 11
+
+    (3) program_block -> declared_type_block variable_block . procedure_block operation_block
+    (13) procedure_block -> . procedure_block procedure
+    (14) procedure_block -> . empty
+    (100) empty -> .
+
+    BEGIN           reduce using rule 100 (empty -> .)
+    PROCEDURE       reduce using rule 100 (empty -> .)
+
+    procedure_block                shift and go to state 16
+    empty                          shift and go to state 17
+
+state 12
+
+    (6) variable_block -> VAR . var_decl var_decl_list
+    (8) var_decl -> . id_list COL type_denoter SEMICOL
+    (11) id_list -> . ID
+    (12) id_list -> . id_list COMA ID
+
+    ID              shift and go to state 15
+
+    var_decl                       shift and go to state 18
+    id_list                        shift and go to state 19
+
+state 13
+
+    (7) variable_block -> empty .
+
+    BEGIN           reduce using rule 7 (variable_block -> empty .)
+    PROCEDURE       reduce using rule 7 (variable_block -> empty .)
+
+
+state 14
+
+    (4) declared_type_block -> TYPE id_list .
+    (12) id_list -> id_list . COMA ID
+
+    VAR             reduce using rule 4 (declared_type_block -> TYPE id_list .)
+    BEGIN           reduce using rule 4 (declared_type_block -> TYPE id_list .)
+    PROCEDURE       reduce using rule 4 (declared_type_block -> TYPE id_list .)
+    COMA            shift and go to state 20
+
+
+state 15
+
+    (11) id_list -> ID .
+
+    COMA            reduce using rule 11 (id_list -> ID .)
+    VAR             reduce using rule 11 (id_list -> ID .)
+    BEGIN           reduce using rule 11 (id_list -> ID .)
+    PROCEDURE       reduce using rule 11 (id_list -> ID .)
+    COL             reduce using rule 11 (id_list -> ID .)
+
+
+state 16
+
+    (3) program_block -> declared_type_block variable_block procedure_block . operation_block
+    (13) procedure_block -> procedure_block . procedure
+    (60) operation_block -> . BEGIN statement_sequence END
+    (15) procedure -> . procedure_header SEMICOL program_block SEMICOL
+    (16) procedure_header -> . PROCEDURE ID
+    (17) procedure_header -> . PROCEDURE ID LP parameters parameters_list RP
+
+    BEGIN           shift and go to state 23
+    PROCEDURE       shift and go to state 25
+
+    operation_block                shift and go to state 21
+    procedure                      shift and go to state 22
+    procedure_header               shift and go to state 24
+
+state 17
+
+    (14) procedure_block -> empty .
+
+    BEGIN           reduce using rule 14 (procedure_block -> empty .)
+    PROCEDURE       reduce using rule 14 (procedure_block -> empty .)
+
+
+state 18
+
+    (6) variable_block -> VAR var_decl . var_decl_list
+    (9) var_decl_list -> . var_decl_list var_decl
+    (10) var_decl_list -> . empty
+    (100) empty -> .
+
+    ID              reduce using rule 100 (empty -> .)
+    BEGIN           reduce using rule 100 (empty -> .)
+    PROCEDURE       reduce using rule 100 (empty -> .)
+
+    var_decl_list                  shift and go to state 26
+    empty                          shift and go to state 27
+
+state 19
+
+    (8) var_decl -> id_list . COL type_denoter SEMICOL
+    (12) id_list -> id_list . COMA ID
+
+    COL             shift and go to state 28
+    COMA            shift and go to state 20
+
+
+state 20
+
+    (12) id_list -> id_list COMA . ID
+
+    ID              shift and go to state 29
+
+
+state 21
+
+    (3) program_block -> declared_type_block variable_block procedure_block operation_block .
+
+    DOT             reduce using rule 3 (program_block -> declared_type_block variable_block procedure_block operation_block .)
+    SEMICOL         reduce using rule 3 (program_block -> declared_type_block variable_block procedure_block operation_block .)
+
+
+state 22
+
+    (13) procedure_block -> procedure_block procedure .
+
+    BEGIN           reduce using rule 13 (procedure_block -> procedure_block procedure .)
+    PROCEDURE       reduce using rule 13 (procedure_block -> procedure_block procedure .)
+
+
+state 23
+
+    (60) operation_block -> BEGIN . statement_sequence END
+    (43) statement_sequence -> . statement statement_list
+    (49) statement -> . simple_statement
+    (50) statement -> . structured_statement
+    (51) statement -> . for_statement
+    (52) simple_statement -> . assign_statement
+    (53) simple_statement -> . empty
+    (54) structured_statement -> . operation_sub_block
+    (55) structured_statement -> . conditional_statement
+    (56) structured_statement -> . loop_statement
+    (58) for_statement -> . for_id ASSIG expression to_downto expression for_do statement
+    (48) assign_statement -> . id2 ASSIG expression
+    (100) empty -> .
+    (75) operation_sub_block -> . BEGIN statement_sequence END
+    (61) conditional_statement -> . if_part expression then_part statement else_part
+    (62) conditional_statement -> . if_part expression then_part statement
+    (57) loop_statement -> . for_do
+    (76) for_id -> . FOR ID
+    (70) id2 -> . ID
+    (63) if_part -> . IF
+    (79) for_do -> . DO
+
+    SEMICOL         reduce using rule 100 (empty -> .)
+    END             reduce using rule 100 (empty -> .)
+    BEGIN           shift and go to state 30
+    FOR             shift and go to state 45
+    ID              shift and go to state 46
+    IF              shift and go to state 47
+    DO              shift and go to state 48
+
+    statement_sequence             shift and go to state 31
+    statement                      shift and go to state 32
+    simple_statement               shift and go to state 33
+    structured_statement           shift and go to state 34
+    for_statement                  shift and go to state 35
+    assign_statement               shift and go to state 36
+    empty                          shift and go to state 37
+    operation_sub_block            shift and go to state 38
+    conditional_statement          shift and go to state 39
+    loop_statement                 shift and go to state 40
+    for_id                         shift and go to state 41
+    for_do                         shift and go to state 42
+    id2                            shift and go to state 43
+    if_part                        shift and go to state 44
+
+state 24
+
+    (15) procedure -> procedure_header . SEMICOL program_block SEMICOL
+
+    SEMICOL         shift and go to state 49
+
+
+state 25
+
+    (16) procedure_header -> PROCEDURE . ID
+    (17) procedure_header -> PROCEDURE . ID LP parameters parameters_list RP
+
+    ID              shift and go to state 50
+
+
+state 26
+
+    (6) variable_block -> VAR var_decl var_decl_list .
+    (9) var_decl_list -> var_decl_list . var_decl
+    (8) var_decl -> . id_list COL type_denoter SEMICOL
+    (11) id_list -> . ID
+    (12) id_list -> . id_list COMA ID
+
+    BEGIN           reduce using rule 6 (variable_block -> VAR var_decl var_decl_list .)
+    PROCEDURE       reduce using rule 6 (variable_block -> VAR var_decl var_decl_list .)
+    ID              shift and go to state 15
+
+    var_decl                       shift and go to state 51
+    id_list                        shift and go to state 19
+
+state 27
+
+    (10) var_decl_list -> empty .
+
+    ID              reduce using rule 10 (var_decl_list -> empty .)
+    BEGIN           reduce using rule 10 (var_decl_list -> empty .)
+    PROCEDURE       reduce using rule 10 (var_decl_list -> empty .)
+
+
+state 28
+
+    (8) var_decl -> id_list COL . type_denoter SEMICOL
+    (25) type_denoter -> . stand_type
+    (26) type_denoter -> . id1
+    (37) stand_type -> . CHAR
+    (38) stand_type -> . INTEGER
+    (39) stand_type -> . REAL
+    (40) stand_type -> . BOOLEAN
+    (41) stand_type -> . TEXT
+    (69) id1 -> . ID
+
+    CHAR            shift and go to state 55
+    INTEGER         shift and go to state 56
+    REAL            shift and go to state 57
+    BOOLEAN         shift and go to state 58
+    TEXT            shift and go to state 59
+    ID              shift and go to state 60
+
+    type_denoter                   shift and go to state 52
+    stand_type                     shift and go to state 53
+    id1                            shift and go to state 54
+
+state 29
+
+    (12) id_list -> id_list COMA ID .
+
+    COMA            reduce using rule 12 (id_list -> id_list COMA ID .)
+    VAR             reduce using rule 12 (id_list -> id_list COMA ID .)
+    BEGIN           reduce using rule 12 (id_list -> id_list COMA ID .)
+    PROCEDURE       reduce using rule 12 (id_list -> id_list COMA ID .)
+    COL             reduce using rule 12 (id_list -> id_list COMA ID .)
+
+
+state 30
+
+    (75) operation_sub_block -> BEGIN . statement_sequence END
+    (43) statement_sequence -> . statement statement_list
+    (49) statement -> . simple_statement
+    (50) statement -> . structured_statement
+    (51) statement -> . for_statement
+    (52) simple_statement -> . assign_statement
+    (53) simple_statement -> . empty
+    (54) structured_statement -> . operation_sub_block
+    (55) structured_statement -> . conditional_statement
+    (56) structured_statement -> . loop_statement
+    (58) for_statement -> . for_id ASSIG expression to_downto expression for_do statement
+    (48) assign_statement -> . id2 ASSIG expression
+    (100) empty -> .
+    (75) operation_sub_block -> . BEGIN statement_sequence END
+    (61) conditional_statement -> . if_part expression then_part statement else_part
+    (62) conditional_statement -> . if_part expression then_part statement
+    (57) loop_statement -> . for_do
+    (76) for_id -> . FOR ID
+    (70) id2 -> . ID
+    (63) if_part -> . IF
+    (79) for_do -> . DO
+
+    SEMICOL         reduce using rule 100 (empty -> .)
+    END             reduce using rule 100 (empty -> .)
+    BEGIN           shift and go to state 30
+    FOR             shift and go to state 45
+    ID              shift and go to state 46
+    IF              shift and go to state 47
+    DO              shift and go to state 48
+
+    statement_sequence             shift and go to state 61
+    statement                      shift and go to state 32
+    simple_statement               shift and go to state 33
+    structured_statement           shift and go to state 34
+    for_statement                  shift and go to state 35
+    assign_statement               shift and go to state 36
+    empty                          shift and go to state 37
+    operation_sub_block            shift and go to state 38
+    conditional_statement          shift and go to state 39
+    loop_statement                 shift and go to state 40
+    for_id                         shift and go to state 41
+    for_do                         shift and go to state 42
+    id2                            shift and go to state 43
+    if_part                        shift and go to state 44
+
+state 31
+
+    (60) operation_block -> BEGIN statement_sequence . END
+
+    END             shift and go to state 62
+
+
+state 32
+
+    (43) statement_sequence -> statement . statement_list
+    (44) statement_list -> . statement_list SEMICOL statement
+    (45) statement_list -> . empty
+    (100) empty -> .
+
+    SEMICOL         reduce using rule 100 (empty -> .)
+    END             reduce using rule 100 (empty -> .)
+
+    statement_list                 shift and go to state 63
+    empty                          shift and go to state 64
+
+state 33
+
+    (49) statement -> simple_statement .
+
+    SEMICOL         reduce using rule 49 (statement -> simple_statement .)
+    END             reduce using rule 49 (statement -> simple_statement .)
+    ELSE            reduce using rule 49 (statement -> simple_statement .)
+
+
+state 34
+
+    (50) statement -> structured_statement .
+
+    SEMICOL         reduce using rule 50 (statement -> structured_statement .)
+    END             reduce using rule 50 (statement -> structured_statement .)
+    ELSE            reduce using rule 50 (statement -> structured_statement .)
+
+
+state 35
+
+    (51) statement -> for_statement .
+
+    SEMICOL         reduce using rule 51 (statement -> for_statement .)
+    END             reduce using rule 51 (statement -> for_statement .)
+    ELSE            reduce using rule 51 (statement -> for_statement .)
+
+
+state 36
+
+    (52) simple_statement -> assign_statement .
+
+    SEMICOL         reduce using rule 52 (simple_statement -> assign_statement .)
+    END             reduce using rule 52 (simple_statement -> assign_statement .)
+    ELSE            reduce using rule 52 (simple_statement -> assign_statement .)
+
+
+state 37
+
+    (53) simple_statement -> empty .
+
+    SEMICOL         reduce using rule 53 (simple_statement -> empty .)
+    END             reduce using rule 53 (simple_statement -> empty .)
+    ELSE            reduce using rule 53 (simple_statement -> empty .)
+
+
+state 38
+
+    (54) structured_statement -> operation_sub_block .
+
+    SEMICOL         reduce using rule 54 (structured_statement -> operation_sub_block .)
+    END             reduce using rule 54 (structured_statement -> operation_sub_block .)
+    ELSE            reduce using rule 54 (structured_statement -> operation_sub_block .)
+
+
+state 39
+
+    (55) structured_statement -> conditional_statement .
+
+    SEMICOL         reduce using rule 55 (structured_statement -> conditional_statement .)
+    END             reduce using rule 55 (structured_statement -> conditional_statement .)
+    ELSE            reduce using rule 55 (structured_statement -> conditional_statement .)
+
+
+state 40
+
+    (56) structured_statement -> loop_statement .
+
+    SEMICOL         reduce using rule 56 (structured_statement -> loop_statement .)
+    END             reduce using rule 56 (structured_statement -> loop_statement .)
+    ELSE            reduce using rule 56 (structured_statement -> loop_statement .)
+
+
+state 41
+
+    (58) for_statement -> for_id . ASSIG expression to_downto expression for_do statement
+
+    ASSIG           shift and go to state 65
+
+
+state 42
+
+    (57) loop_statement -> for_do .
+
+    SEMICOL         reduce using rule 57 (loop_statement -> for_do .)
+    END             reduce using rule 57 (loop_statement -> for_do .)
+    ELSE            reduce using rule 57 (loop_statement -> for_do .)
+
+
+state 43
+
+    (48) assign_statement -> id2 . ASSIG expression
+
+    ASSIG           shift and go to state 66
+
+
+state 44
+
+    (61) conditional_statement -> if_part . expression then_part statement else_part
+    (62) conditional_statement -> if_part . expression then_part statement
+    (72) expression -> . simple_expression comparison_operator simple_expression
+    (73) expression -> . simple_expression
+    (74) expression -> . bool_value
+    (85) simple_expression -> . term additional_oper_list
+    (65) bool_value -> . TRUE
+    (66) bool_value -> . FALSE
+    (91) term -> . factor factor_list
+    (96) factor -> . real_number
+    (97) factor -> . ID
+    (98) factor -> . LP expression RP
+    (99) factor -> . NOT factor
+    (31) real_number -> . num
+    (32) real_number -> . num dot num
+    (33) num -> . NUMBER
+
+    TRUE            shift and go to state 71
+    FALSE           shift and go to state 72
+    ID              shift and go to state 75
+    LP              shift and go to state 76
+    NOT             shift and go to state 77
+    NUMBER          shift and go to state 79
+
+    expression                     shift and go to state 67
+    simple_expression              shift and go to state 68
+    bool_value                     shift and go to state 69
+    term                           shift and go to state 70
+    factor                         shift and go to state 73
+    real_number                    shift and go to state 74
+    num                            shift and go to state 78
+
+state 45
+
+    (76) for_id -> FOR . ID
+
+    ID              shift and go to state 80
+
+
+state 46
+
+    (70) id2 -> ID .
+
+    ASSIG           reduce using rule 70 (id2 -> ID .)
+
+
+state 47
+
+    (63) if_part -> IF .
+
+    TRUE            reduce using rule 63 (if_part -> IF .)
+    FALSE           reduce using rule 63 (if_part -> IF .)
+    ID              reduce using rule 63 (if_part -> IF .)
+    LP              reduce using rule 63 (if_part -> IF .)
+    NOT             reduce using rule 63 (if_part -> IF .)
+    NUMBER          reduce using rule 63 (if_part -> IF .)
+
+
+state 48
+
+    (79) for_do -> DO .
+
+    SEMICOL         reduce using rule 79 (for_do -> DO .)
+    END             reduce using rule 79 (for_do -> DO .)
+    ELSE            reduce using rule 79 (for_do -> DO .)
+    BEGIN           reduce using rule 79 (for_do -> DO .)
+    FOR             reduce using rule 79 (for_do -> DO .)
+    ID              reduce using rule 79 (for_do -> DO .)
+    IF              reduce using rule 79 (for_do -> DO .)
+    DO              reduce using rule 79 (for_do -> DO .)
+
+
+state 49
+
+    (15) procedure -> procedure_header SEMICOL . program_block SEMICOL
+    (3) program_block -> . declared_type_block variable_block procedure_block operation_block
+    (4) declared_type_block -> . TYPE id_list
+    (5) declared_type_block -> . empty
+    (100) empty -> .
+
+    TYPE            shift and go to state 8
+    VAR             reduce using rule 100 (empty -> .)
+    BEGIN           reduce using rule 100 (empty -> .)
+    PROCEDURE       reduce using rule 100 (empty -> .)
+
+    program_block                  shift and go to state 81
+    declared_type_block            shift and go to state 7
+    empty                          shift and go to state 9
+
+state 50
+
+    (16) procedure_header -> PROCEDURE ID .
+    (17) procedure_header -> PROCEDURE ID . LP parameters parameters_list RP
+
+    SEMICOL         reduce using rule 16 (procedure_header -> PROCEDURE ID .)
+    LP              shift and go to state 82
+
+
+state 51
+
+    (9) var_decl_list -> var_decl_list var_decl .
+
+    ID              reduce using rule 9 (var_decl_list -> var_decl_list var_decl .)
+    BEGIN           reduce using rule 9 (var_decl_list -> var_decl_list var_decl .)
+    PROCEDURE       reduce using rule 9 (var_decl_list -> var_decl_list var_decl .)
+
+
+state 52
+
+    (8) var_decl -> id_list COL type_denoter . SEMICOL
+
+    SEMICOL         shift and go to state 83
+
+
+state 53
+
+    (25) type_denoter -> stand_type .
+
+    SEMICOL         reduce using rule 25 (type_denoter -> stand_type .)
+
+
+state 54
+
+    (26) type_denoter -> id1 .
+
+    SEMICOL         reduce using rule 26 (type_denoter -> id1 .)
+
+
+state 55
+
+    (37) stand_type -> CHAR .
+
+    SEMICOL         reduce using rule 37 (stand_type -> CHAR .)
+
+
+state 56
+
+    (38) stand_type -> INTEGER .
+
+    SEMICOL         reduce using rule 38 (stand_type -> INTEGER .)
+
+
+state 57
+
+    (39) stand_type -> REAL .
+
+    SEMICOL         reduce using rule 39 (stand_type -> REAL .)
+
+
+state 58
+
+    (40) stand_type -> BOOLEAN .
+
+    SEMICOL         reduce using rule 40 (stand_type -> BOOLEAN .)
+
+
+state 59
+
+    (41) stand_type -> TEXT .
+
+    SEMICOL         reduce using rule 41 (stand_type -> TEXT .)
+
+
+state 60
+
+    (69) id1 -> ID .
+
+    SEMICOL         reduce using rule 69 (id1 -> ID .)
+
+
+state 61
+
+    (75) operation_sub_block -> BEGIN statement_sequence . END
+
+    END             shift and go to state 84
+
+
+state 62
+
+    (60) operation_block -> BEGIN statement_sequence END .
+
+    DOT             reduce using rule 60 (operation_block -> BEGIN statement_sequence END .)
+    SEMICOL         reduce using rule 60 (operation_block -> BEGIN statement_sequence END .)
+
+
+state 63
+
+    (43) statement_sequence -> statement statement_list .
+    (44) statement_list -> statement_list . SEMICOL statement
+
+    END             reduce using rule 43 (statement_sequence -> statement statement_list .)
+    SEMICOL         shift and go to state 85
+
+
+state 64
+
+    (45) statement_list -> empty .
+
+    SEMICOL         reduce using rule 45 (statement_list -> empty .)
+    END             reduce using rule 45 (statement_list -> empty .)
+
+
+state 65
+
+    (58) for_statement -> for_id ASSIG . expression to_downto expression for_do statement
+    (72) expression -> . simple_expression comparison_operator simple_expression
+    (73) expression -> . simple_expression
+    (74) expression -> . bool_value
+    (85) simple_expression -> . term additional_oper_list
+    (65) bool_value -> . TRUE
+    (66) bool_value -> . FALSE
+    (91) term -> . factor factor_list
+    (96) factor -> . real_number
+    (97) factor -> . ID
+    (98) factor -> . LP expression RP
+    (99) factor -> . NOT factor
+    (31) real_number -> . num
+    (32) real_number -> . num dot num
+    (33) num -> . NUMBER
+
+    TRUE            shift and go to state 71
+    FALSE           shift and go to state 72
+    ID              shift and go to state 75
+    LP              shift and go to state 76
+    NOT             shift and go to state 77
+    NUMBER          shift and go to state 79
+
+    expression                     shift and go to state 86
+    simple_expression              shift and go to state 68
+    bool_value                     shift and go to state 69
+    term                           shift and go to state 70
+    factor                         shift and go to state 73
+    real_number                    shift and go to state 74
+    num                            shift and go to state 78
+
+state 66
+
+    (48) assign_statement -> id2 ASSIG . expression
+    (72) expression -> . simple_expression comparison_operator simple_expression
+    (73) expression -> . simple_expression
+    (74) expression -> . bool_value
+    (85) simple_expression -> . term additional_oper_list
+    (65) bool_value -> . TRUE
+    (66) bool_value -> . FALSE
+    (91) term -> . factor factor_list
+    (96) factor -> . real_number
+    (97) factor -> . ID
+    (98) factor -> . LP expression RP
+    (99) factor -> . NOT factor
+    (31) real_number -> . num
+    (32) real_number -> . num dot num
+    (33) num -> . NUMBER
+
+    TRUE            shift and go to state 71
+    FALSE           shift and go to state 72
+    ID              shift and go to state 75
+    LP              shift and go to state 76
+    NOT             shift and go to state 77
+    NUMBER          shift and go to state 79
+
+    expression                     shift and go to state 87
+    simple_expression              shift and go to state 68
+    bool_value                     shift and go to state 69
+    term                           shift and go to state 70
+    factor                         shift and go to state 73
+    real_number                    shift and go to state 74
+    num                            shift and go to state 78
+
+state 67
+
+    (61) conditional_statement -> if_part expression . then_part statement else_part
+    (62) conditional_statement -> if_part expression . then_part statement
+    (64) then_part -> . THEN
+
+    THEN            shift and go to state 89
+
+    then_part                      shift and go to state 88
+
+state 68
+
+    (72) expression -> simple_expression . comparison_operator simple_expression
+    (73) expression -> simple_expression .
+    (80) comparison_operator -> . LT
+    (81) comparison_operator -> . GT
+    (82) comparison_operator -> . LOREQ
+    (83) comparison_operator -> . GOREQ
+    (84) comparison_operator -> . EQ
+
+    THEN            reduce using rule 73 (expression -> simple_expression .)
+    TO              reduce using rule 73 (expression -> simple_expression .)
+    DOWNTO          reduce using rule 73 (expression -> simple_expression .)
+    SEMICOL         reduce using rule 73 (expression -> simple_expression .)
+    END             reduce using rule 73 (expression -> simple_expression .)
+    ELSE            reduce using rule 73 (expression -> simple_expression .)
+    RP              reduce using rule 73 (expression -> simple_expression .)
+    DO              reduce using rule 73 (expression -> simple_expression .)
+    LT              shift and go to state 91
+    GT              shift and go to state 92
+    LOREQ           shift and go to state 93
+    GOREQ           shift and go to state 94
+    EQ              shift and go to state 95
+
+    comparison_operator            shift and go to state 90
+
+state 69
+
+    (74) expression -> bool_value .
+
+    THEN            reduce using rule 74 (expression -> bool_value .)
+    TO              reduce using rule 74 (expression -> bool_value .)
+    DOWNTO          reduce using rule 74 (expression -> bool_value .)
+    SEMICOL         reduce using rule 74 (expression -> bool_value .)
+    END             reduce using rule 74 (expression -> bool_value .)
+    ELSE            reduce using rule 74 (expression -> bool_value .)
+    RP              reduce using rule 74 (expression -> bool_value .)
+    DO              reduce using rule 74 (expression -> bool_value .)
+
+
+state 70
+
+    (85) simple_expression -> term . additional_oper_list
+    (86) additional_oper_list -> . additional_oper_list additional_oper term
+    (87) additional_oper_list -> . empty
+    (100) empty -> .
+
+    MINUS           reduce using rule 100 (empty -> .)
+    PLUS            reduce using rule 100 (empty -> .)
+    OR              reduce using rule 100 (empty -> .)
+    LT              reduce using rule 100 (empty -> .)
+    GT              reduce using rule 100 (empty -> .)
+    LOREQ           reduce using rule 100 (empty -> .)
+    GOREQ           reduce using rule 100 (empty -> .)
+    EQ              reduce using rule 100 (empty -> .)
+    THEN            reduce using rule 100 (empty -> .)
+    TO              reduce using rule 100 (empty -> .)
+    DOWNTO          reduce using rule 100 (empty -> .)
+    SEMICOL         reduce using rule 100 (empty -> .)
+    END             reduce using rule 100 (empty -> .)
+    ELSE            reduce using rule 100 (empty -> .)
+    RP              reduce using rule 100 (empty -> .)
+    DO              reduce using rule 100 (empty -> .)
+
+    additional_oper_list           shift and go to state 96
+    empty                          shift and go to state 97
+
+state 71
+
+    (65) bool_value -> TRUE .
+
+    THEN            reduce using rule 65 (bool_value -> TRUE .)
+    TO              reduce using rule 65 (bool_value -> TRUE .)
+    DOWNTO          reduce using rule 65 (bool_value -> TRUE .)
+    SEMICOL         reduce using rule 65 (bool_value -> TRUE .)
+    END             reduce using rule 65 (bool_value -> TRUE .)
+    ELSE            reduce using rule 65 (bool_value -> TRUE .)
+    RP              reduce using rule 65 (bool_value -> TRUE .)
+    DO              reduce using rule 65 (bool_value -> TRUE .)
+
+
+state 72
+
+    (66) bool_value -> FALSE .
+
+    THEN            reduce using rule 66 (bool_value -> FALSE .)
+    TO              reduce using rule 66 (bool_value -> FALSE .)
+    DOWNTO          reduce using rule 66 (bool_value -> FALSE .)
+    SEMICOL         reduce using rule 66 (bool_value -> FALSE .)
+    END             reduce using rule 66 (bool_value -> FALSE .)
+    ELSE            reduce using rule 66 (bool_value -> FALSE .)
+    RP              reduce using rule 66 (bool_value -> FALSE .)
+    DO              reduce using rule 66 (bool_value -> FALSE .)
+
+
+state 73
+
+    (91) term -> factor . factor_list
+    (92) factor_list -> . factor_list and_div_oper factor
+    (93) factor_list -> . empty
+    (100) empty -> .
+
+    DIV             reduce using rule 100 (empty -> .)
+    AND             reduce using rule 100 (empty -> .)
+    MINUS           reduce using rule 100 (empty -> .)
+    PLUS            reduce using rule 100 (empty -> .)
+    OR              reduce using rule 100 (empty -> .)
+    LT              reduce using rule 100 (empty -> .)
+    GT              reduce using rule 100 (empty -> .)
+    LOREQ           reduce using rule 100 (empty -> .)
+    GOREQ           reduce using rule 100 (empty -> .)
+    EQ              reduce using rule 100 (empty -> .)
+    THEN            reduce using rule 100 (empty -> .)
+    TO              reduce using rule 100 (empty -> .)
+    DOWNTO          reduce using rule 100 (empty -> .)
+    SEMICOL         reduce using rule 100 (empty -> .)
+    END             reduce using rule 100 (empty -> .)
+    ELSE            reduce using rule 100 (empty -> .)
+    RP              reduce using rule 100 (empty -> .)
+    DO              reduce using rule 100 (empty -> .)
+
+    factor_list                    shift and go to state 98
+    empty                          shift and go to state 99
+
+state 74
+
+    (96) factor -> real_number .
+
+    DIV             reduce using rule 96 (factor -> real_number .)
+    AND             reduce using rule 96 (factor -> real_number .)
+    MINUS           reduce using rule 96 (factor -> real_number .)
+    PLUS            reduce using rule 96 (factor -> real_number .)
+    OR              reduce using rule 96 (factor -> real_number .)
+    LT              reduce using rule 96 (factor -> real_number .)
+    GT              reduce using rule 96 (factor -> real_number .)
+    LOREQ           reduce using rule 96 (factor -> real_number .)
+    GOREQ           reduce using rule 96 (factor -> real_number .)
+    EQ              reduce using rule 96 (factor -> real_number .)
+    THEN            reduce using rule 96 (factor -> real_number .)
+    TO              reduce using rule 96 (factor -> real_number .)
+    DOWNTO          reduce using rule 96 (factor -> real_number .)
+    SEMICOL         reduce using rule 96 (factor -> real_number .)
+    END             reduce using rule 96 (factor -> real_number .)
+    ELSE            reduce using rule 96 (factor -> real_number .)
+    RP              reduce using rule 96 (factor -> real_number .)
+    DO              reduce using rule 96 (factor -> real_number .)
+
+
+state 75
+
+    (97) factor -> ID .
+
+    DIV             reduce using rule 97 (factor -> ID .)
+    AND             reduce using rule 97 (factor -> ID .)
+    MINUS           reduce using rule 97 (factor -> ID .)
+    PLUS            reduce using rule 97 (factor -> ID .)
+    OR              reduce using rule 97 (factor -> ID .)
+    LT              reduce using rule 97 (factor -> ID .)
+    GT              reduce using rule 97 (factor -> ID .)
+    LOREQ           reduce using rule 97 (factor -> ID .)
+    GOREQ           reduce using rule 97 (factor -> ID .)
+    EQ              reduce using rule 97 (factor -> ID .)
+    THEN            reduce using rule 97 (factor -> ID .)
+    TO              reduce using rule 97 (factor -> ID .)
+    DOWNTO          reduce using rule 97 (factor -> ID .)
+    SEMICOL         reduce using rule 97 (factor -> ID .)
+    END             reduce using rule 97 (factor -> ID .)
+    ELSE            reduce using rule 97 (factor -> ID .)
+    RP              reduce using rule 97 (factor -> ID .)
+    DO              reduce using rule 97 (factor -> ID .)
+
+
+state 76
+
+    (98) factor -> LP . expression RP
+    (72) expression -> . simple_expression comparison_operator simple_expression
+    (73) expression -> . simple_expression
+    (74) expression -> . bool_value
+    (85) simple_expression -> . term additional_oper_list
+    (65) bool_value -> . TRUE
+    (66) bool_value -> . FALSE
+    (91) term -> . factor factor_list
+    (96) factor -> . real_number
+    (97) factor -> . ID
+    (98) factor -> . LP expression RP
+    (99) factor -> . NOT factor
+    (31) real_number -> . num
+    (32) real_number -> . num dot num
+    (33) num -> . NUMBER
+
+    TRUE            shift and go to state 71
+    FALSE           shift and go to state 72
+    ID              shift and go to state 75
+    LP              shift and go to state 76
+    NOT             shift and go to state 77
+    NUMBER          shift and go to state 79
+
+    expression                     shift and go to state 100
+    simple_expression              shift and go to state 68
+    bool_value                     shift and go to state 69
+    term                           shift and go to state 70
+    factor                         shift and go to state 73
+    real_number                    shift and go to state 74
+    num                            shift and go to state 78
+
+state 77
+
+    (99) factor -> NOT . factor
+    (96) factor -> . real_number
+    (97) factor -> . ID
+    (98) factor -> . LP expression RP
+    (99) factor -> . NOT factor
+    (31) real_number -> . num
+    (32) real_number -> . num dot num
+    (33) num -> . NUMBER
+
+    ID              shift and go to state 75
+    LP              shift and go to state 76
+    NOT             shift and go to state 77
+    NUMBER          shift and go to state 79
+
+    factor                         shift and go to state 101
+    real_number                    shift and go to state 74
+    num                            shift and go to state 78
+
+state 78
+
+    (31) real_number -> num .
+    (32) real_number -> num . dot num
+    (34) dot -> . DOT
+
+    DIV             reduce using rule 31 (real_number -> num .)
+    AND             reduce using rule 31 (real_number -> num .)
+    MINUS           reduce using rule 31 (real_number -> num .)
+    PLUS            reduce using rule 31 (real_number -> num .)
+    OR              reduce using rule 31 (real_number -> num .)
+    LT              reduce using rule 31 (real_number -> num .)
+    GT              reduce using rule 31 (real_number -> num .)
+    LOREQ           reduce using rule 31 (real_number -> num .)
+    GOREQ           reduce using rule 31 (real_number -> num .)
+    EQ              reduce using rule 31 (real_number -> num .)
+    THEN            reduce using rule 31 (real_number -> num .)
+    TO              reduce using rule 31 (real_number -> num .)
+    DOWNTO          reduce using rule 31 (real_number -> num .)
+    SEMICOL         reduce using rule 31 (real_number -> num .)
+    END             reduce using rule 31 (real_number -> num .)
+    ELSE            reduce using rule 31 (real_number -> num .)
+    RP              reduce using rule 31 (real_number -> num .)
+    DO              reduce using rule 31 (real_number -> num .)
+    DOT             shift and go to state 103
+
+    dot                            shift and go to state 102
+
+state 79
+
+    (33) num -> NUMBER .
+
+    DOT             reduce using rule 33 (num -> NUMBER .)
+    DIV             reduce using rule 33 (num -> NUMBER .)
+    AND             reduce using rule 33 (num -> NUMBER .)
+    MINUS           reduce using rule 33 (num -> NUMBER .)
+    PLUS            reduce using rule 33 (num -> NUMBER .)
+    OR              reduce using rule 33 (num -> NUMBER .)
+    LT              reduce using rule 33 (num -> NUMBER .)
+    GT              reduce using rule 33 (num -> NUMBER .)
+    LOREQ           reduce using rule 33 (num -> NUMBER .)
+    GOREQ           reduce using rule 33 (num -> NUMBER .)
+    EQ              reduce using rule 33 (num -> NUMBER .)
+    THEN            reduce using rule 33 (num -> NUMBER .)
+    TO              reduce using rule 33 (num -> NUMBER .)
+    DOWNTO          reduce using rule 33 (num -> NUMBER .)
+    SEMICOL         reduce using rule 33 (num -> NUMBER .)
+    END             reduce using rule 33 (num -> NUMBER .)
+    ELSE            reduce using rule 33 (num -> NUMBER .)
+    RP              reduce using rule 33 (num -> NUMBER .)
+    DO              reduce using rule 33 (num -> NUMBER .)
+
+
+state 80
+
+    (76) for_id -> FOR ID .
+
+    ASSIG           reduce using rule 76 (for_id -> FOR ID .)
+
+
+state 81
+
+    (15) procedure -> procedure_header SEMICOL program_block . SEMICOL
+
+    SEMICOL         shift and go to state 104
+
+
+state 82
+
+    (17) procedure_header -> PROCEDURE ID LP . parameters parameters_list RP
+    (18) parameters -> . id_list COL stand_type_procedure
+    (11) id_list -> . ID
+    (12) id_list -> . id_list COMA ID
+
+    ID              shift and go to state 15
+
+    parameters                     shift and go to state 105
+    id_list                        shift and go to state 106
+
+state 83
+
+    (8) var_decl -> id_list COL type_denoter SEMICOL .
+
+    ID              reduce using rule 8 (var_decl -> id_list COL type_denoter SEMICOL .)
+    BEGIN           reduce using rule 8 (var_decl -> id_list COL type_denoter SEMICOL .)
+    PROCEDURE       reduce using rule 8 (var_decl -> id_list COL type_denoter SEMICOL .)
+
+
+state 84
+
+    (75) operation_sub_block -> BEGIN statement_sequence END .
+
+    SEMICOL         reduce using rule 75 (operation_sub_block -> BEGIN statement_sequence END .)
+    END             reduce using rule 75 (operation_sub_block -> BEGIN statement_sequence END .)
+    ELSE            reduce using rule 75 (operation_sub_block -> BEGIN statement_sequence END .)
+
+
+state 85
+
+    (44) statement_list -> statement_list SEMICOL . statement
+    (49) statement -> . simple_statement
+    (50) statement -> . structured_statement
+    (51) statement -> . for_statement
+    (52) simple_statement -> . assign_statement
+    (53) simple_statement -> . empty
+    (54) structured_statement -> . operation_sub_block
+    (55) structured_statement -> . conditional_statement
+    (56) structured_statement -> . loop_statement
+    (58) for_statement -> . for_id ASSIG expression to_downto expression for_do statement
+    (48) assign_statement -> . id2 ASSIG expression
+    (100) empty -> .
+    (75) operation_sub_block -> . BEGIN statement_sequence END
+    (61) conditional_statement -> . if_part expression then_part statement else_part
+    (62) conditional_statement -> . if_part expression then_part statement
+    (57) loop_statement -> . for_do
+    (76) for_id -> . FOR ID
+    (70) id2 -> . ID
+    (63) if_part -> . IF
+    (79) for_do -> . DO
+
+    SEMICOL         reduce using rule 100 (empty -> .)
+    END             reduce using rule 100 (empty -> .)
+    BEGIN           shift and go to state 30
+    FOR             shift and go to state 45
+    ID              shift and go to state 46
+    IF              shift and go to state 47
+    DO              shift and go to state 48
+
+    statement                      shift and go to state 107
+    simple_statement               shift and go to state 33
+    structured_statement           shift and go to state 34
+    for_statement                  shift and go to state 35
+    assign_statement               shift and go to state 36
+    empty                          shift and go to state 37
+    operation_sub_block            shift and go to state 38
+    conditional_statement          shift and go to state 39
+    loop_statement                 shift and go to state 40
+    for_id                         shift and go to state 41
+    for_do                         shift and go to state 42
+    id2                            shift and go to state 43
+    if_part                        shift and go to state 44
+
+state 86
+
+    (58) for_statement -> for_id ASSIG expression . to_downto expression for_do statement
+    (77) to_downto -> . TO
+    (78) to_downto -> . DOWNTO
+
+    TO              shift and go to state 109
+    DOWNTO          shift and go to state 110
+
+    to_downto                      shift and go to state 108
+
+state 87
+
+    (48) assign_statement -> id2 ASSIG expression .
+
+    SEMICOL         reduce using rule 48 (assign_statement -> id2 ASSIG expression .)
+    END             reduce using rule 48 (assign_statement -> id2 ASSIG expression .)
+    ELSE            reduce using rule 48 (assign_statement -> id2 ASSIG expression .)
+
+
+state 88
+
+    (61) conditional_statement -> if_part expression then_part . statement else_part
+    (62) conditional_statement -> if_part expression then_part . statement
+    (49) statement -> . simple_statement
+    (50) statement -> . structured_statement
+    (51) statement -> . for_statement
+    (52) simple_statement -> . assign_statement
+    (53) simple_statement -> . empty
+    (54) structured_statement -> . operation_sub_block
+    (55) structured_statement -> . conditional_statement
+    (56) structured_statement -> . loop_statement
+    (58) for_statement -> . for_id ASSIG expression to_downto expression for_do statement
+    (48) assign_statement -> . id2 ASSIG expression
+    (100) empty -> .
+    (75) operation_sub_block -> . BEGIN statement_sequence END
+    (61) conditional_statement -> . if_part expression then_part statement else_part
+    (62) conditional_statement -> . if_part expression then_part statement
+    (57) loop_statement -> . for_do
+    (76) for_id -> . FOR ID
+    (70) id2 -> . ID
+    (63) if_part -> . IF
+    (79) for_do -> . DO
+
+    ELSE            reduce using rule 100 (empty -> .)
+    SEMICOL         reduce using rule 100 (empty -> .)
+    END             reduce using rule 100 (empty -> .)
+    BEGIN           shift and go to state 30
+    FOR             shift and go to state 45
+    ID              shift and go to state 46
+    IF              shift and go to state 47
+    DO              shift and go to state 48
+
+    if_part                        shift and go to state 44
+    statement                      shift and go to state 111
+    simple_statement               shift and go to state 33
+    structured_statement           shift and go to state 34
+    for_statement                  shift and go to state 35
+    assign_statement               shift and go to state 36
+    empty                          shift and go to state 37
+    operation_sub_block            shift and go to state 38
+    conditional_statement          shift and go to state 39
+    loop_statement                 shift and go to state 40
+    for_id                         shift and go to state 41
+    for_do                         shift and go to state 42
+    id2                            shift and go to state 43
+
+state 89
+
+    (64) then_part -> THEN .
+
+    BEGIN           reduce using rule 64 (then_part -> THEN .)
+    FOR             reduce using rule 64 (then_part -> THEN .)
+    ID              reduce using rule 64 (then_part -> THEN .)
+    IF              reduce using rule 64 (then_part -> THEN .)
+    DO              reduce using rule 64 (then_part -> THEN .)
+    ELSE            reduce using rule 64 (then_part -> THEN .)
+    SEMICOL         reduce using rule 64 (then_part -> THEN .)
+    END             reduce using rule 64 (then_part -> THEN .)
+
+
+state 90
+
+    (72) expression -> simple_expression comparison_operator . simple_expression
+    (85) simple_expression -> . term additional_oper_list
+    (91) term -> . factor factor_list
+    (96) factor -> . real_number
+    (97) factor -> . ID
+    (98) factor -> . LP expression RP
+    (99) factor -> . NOT factor
+    (31) real_number -> . num
+    (32) real_number -> . num dot num
+    (33) num -> . NUMBER
+
+    ID              shift and go to state 75
+    LP              shift and go to state 76
+    NOT             shift and go to state 77
+    NUMBER          shift and go to state 79
+
+    simple_expression              shift and go to state 112
+    term                           shift and go to state 70
+    factor                         shift and go to state 73
+    real_number                    shift and go to state 74
+    num                            shift and go to state 78
+
+state 91
+
+    (80) comparison_operator -> LT .
+
+    ID              reduce using rule 80 (comparison_operator -> LT .)
+    LP              reduce using rule 80 (comparison_operator -> LT .)
+    NOT             reduce using rule 80 (comparison_operator -> LT .)
+    NUMBER          reduce using rule 80 (comparison_operator -> LT .)
+
+
+state 92
+
+    (81) comparison_operator -> GT .
+
+    ID              reduce using rule 81 (comparison_operator -> GT .)
+    LP              reduce using rule 81 (comparison_operator -> GT .)
+    NOT             reduce using rule 81 (comparison_operator -> GT .)
+    NUMBER          reduce using rule 81 (comparison_operator -> GT .)
+
+
+state 93
+
+    (82) comparison_operator -> LOREQ .
+
+    ID              reduce using rule 82 (comparison_operator -> LOREQ .)
+    LP              reduce using rule 82 (comparison_operator -> LOREQ .)
+    NOT             reduce using rule 82 (comparison_operator -> LOREQ .)
+    NUMBER          reduce using rule 82 (comparison_operator -> LOREQ .)
+
+
+state 94
+
+    (83) comparison_operator -> GOREQ .
+
+    ID              reduce using rule 83 (comparison_operator -> GOREQ .)
+    LP              reduce using rule 83 (comparison_operator -> GOREQ .)
+    NOT             reduce using rule 83 (comparison_operator -> GOREQ .)
+    NUMBER          reduce using rule 83 (comparison_operator -> GOREQ .)
+
+
+state 95
+
+    (84) comparison_operator -> EQ .
+
+    ID              reduce using rule 84 (comparison_operator -> EQ .)
+    LP              reduce using rule 84 (comparison_operator -> EQ .)
+    NOT             reduce using rule 84 (comparison_operator -> EQ .)
+    NUMBER          reduce using rule 84 (comparison_operator -> EQ .)
+
+
+state 96
+
+    (85) simple_expression -> term additional_oper_list .
+    (86) additional_oper_list -> additional_oper_list . additional_oper term
+    (88) additional_oper -> . MINUS
+    (89) additional_oper -> . PLUS
+    (90) additional_oper -> . OR
+
+    LT              reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    GT              reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    LOREQ           reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    GOREQ           reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    EQ              reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    THEN            reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    TO              reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    DOWNTO          reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    SEMICOL         reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    END             reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    ELSE            reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    RP              reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    DO              reduce using rule 85 (simple_expression -> term additional_oper_list .)
+    MINUS           shift and go to state 114
+    PLUS            shift and go to state 115
+    OR              shift and go to state 116
+
+    additional_oper                shift and go to state 113
+
+state 97
+
+    (87) additional_oper_list -> empty .
+
+    MINUS           reduce using rule 87 (additional_oper_list -> empty .)
+    PLUS            reduce using rule 87 (additional_oper_list -> empty .)
+    OR              reduce using rule 87 (additional_oper_list -> empty .)
+    LT              reduce using rule 87 (additional_oper_list -> empty .)
+    GT              reduce using rule 87 (additional_oper_list -> empty .)
+    LOREQ           reduce using rule 87 (additional_oper_list -> empty .)
+    GOREQ           reduce using rule 87 (additional_oper_list -> empty .)
+    EQ              reduce using rule 87 (additional_oper_list -> empty .)
+    THEN            reduce using rule 87 (additional_oper_list -> empty .)
+    TO              reduce using rule 87 (additional_oper_list -> empty .)
+    DOWNTO          reduce using rule 87 (additional_oper_list -> empty .)
+    SEMICOL         reduce using rule 87 (additional_oper_list -> empty .)
+    END             reduce using rule 87 (additional_oper_list -> empty .)
+    ELSE            reduce using rule 87 (additional_oper_list -> empty .)
+    RP              reduce using rule 87 (additional_oper_list -> empty .)
+    DO              reduce using rule 87 (additional_oper_list -> empty .)
+
+
+state 98
+
+    (91) term -> factor factor_list .
+    (92) factor_list -> factor_list . and_div_oper factor
+    (94) and_div_oper -> . DIV
+    (95) and_div_oper -> . AND
+
+    MINUS           reduce using rule 91 (term -> factor factor_list .)
+    PLUS            reduce using rule 91 (term -> factor factor_list .)
+    OR              reduce using rule 91 (term -> factor factor_list .)
+    LT              reduce using rule 91 (term -> factor factor_list .)
+    GT              reduce using rule 91 (term -> factor factor_list .)
+    LOREQ           reduce using rule 91 (term -> factor factor_list .)
+    GOREQ           reduce using rule 91 (term -> factor factor_list .)
+    EQ              reduce using rule 91 (term -> factor factor_list .)
+    THEN            reduce using rule 91 (term -> factor factor_list .)
+    TO              reduce using rule 91 (term -> factor factor_list .)
+    DOWNTO          reduce using rule 91 (term -> factor factor_list .)
+    SEMICOL         reduce using rule 91 (term -> factor factor_list .)
+    END             reduce using rule 91 (term -> factor factor_list .)
+    ELSE            reduce using rule 91 (term -> factor factor_list .)
+    RP              reduce using rule 91 (term -> factor factor_list .)
+    DO              reduce using rule 91 (term -> factor factor_list .)
+    DIV             shift and go to state 118
+    AND             shift and go to state 119
+
+    and_div_oper                   shift and go to state 117
+
+state 99
+
+    (93) factor_list -> empty .
+
+    DIV             reduce using rule 93 (factor_list -> empty .)
+    AND             reduce using rule 93 (factor_list -> empty .)
+    MINUS           reduce using rule 93 (factor_list -> empty .)
+    PLUS            reduce using rule 93 (factor_list -> empty .)
+    OR              reduce using rule 93 (factor_list -> empty .)
+    LT              reduce using rule 93 (factor_list -> empty .)
+    GT              reduce using rule 93 (factor_list -> empty .)
+    LOREQ           reduce using rule 93 (factor_list -> empty .)
+    GOREQ           reduce using rule 93 (factor_list -> empty .)
+    EQ              reduce using rule 93 (factor_list -> empty .)
+    THEN            reduce using rule 93 (factor_list -> empty .)
+    TO              reduce using rule 93 (factor_list -> empty .)
+    DOWNTO          reduce using rule 93 (factor_list -> empty .)
+    SEMICOL         reduce using rule 93 (factor_list -> empty .)
+    END             reduce using rule 93 (factor_list -> empty .)
+    ELSE            reduce using rule 93 (factor_list -> empty .)
+    RP              reduce using rule 93 (factor_list -> empty .)
+    DO              reduce using rule 93 (factor_list -> empty .)
+
+
+state 100
+
+    (98) factor -> LP expression . RP
+
+    RP              shift and go to state 120
+
+
+state 101
+
+    (99) factor -> NOT factor .
+
+    DIV             reduce using rule 99 (factor -> NOT factor .)
+    AND             reduce using rule 99 (factor -> NOT factor .)
+    MINUS           reduce using rule 99 (factor -> NOT factor .)
+    PLUS            reduce using rule 99 (factor -> NOT factor .)
+    OR              reduce using rule 99 (factor -> NOT factor .)
+    LT              reduce using rule 99 (factor -> NOT factor .)
+    GT              reduce using rule 99 (factor -> NOT factor .)
+    LOREQ           reduce using rule 99 (factor -> NOT factor .)
+    GOREQ           reduce using rule 99 (factor -> NOT factor .)
+    EQ              reduce using rule 99 (factor -> NOT factor .)
+    THEN            reduce using rule 99 (factor -> NOT factor .)
+    TO              reduce using rule 99 (factor -> NOT factor .)
+    DOWNTO          reduce using rule 99 (factor -> NOT factor .)
+    SEMICOL         reduce using rule 99 (factor -> NOT factor .)
+    END             reduce using rule 99 (factor -> NOT factor .)
+    ELSE            reduce using rule 99 (factor -> NOT factor .)
+    RP              reduce using rule 99 (factor -> NOT factor .)
+    DO              reduce using rule 99 (factor -> NOT factor .)
+
+
+state 102
+
+    (32) real_number -> num dot . num
+    (33) num -> . NUMBER
+
+    NUMBER          shift and go to state 79
+
+    num                            shift and go to state 121
+
+state 103
+
+    (34) dot -> DOT .
+
+    NUMBER          reduce using rule 34 (dot -> DOT .)
+
+
+state 104
+
+    (15) procedure -> procedure_header SEMICOL program_block SEMICOL .
+
+    BEGIN           reduce using rule 15 (procedure -> procedure_header SEMICOL program_block SEMICOL .)
+    PROCEDURE       reduce using rule 15 (procedure -> procedure_header SEMICOL program_block SEMICOL .)
+
+
+state 105
+
+    (17) procedure_header -> PROCEDURE ID LP parameters . parameters_list RP
+    (19) parameters_list -> . parameters_list SEMICOL parameters
+    (20) parameters_list -> . empty
+    (100) empty -> .
+
+    RP              reduce using rule 100 (empty -> .)
+    SEMICOL         reduce using rule 100 (empty -> .)
+
+    parameters_list                shift and go to state 122
+    empty                          shift and go to state 123
+
+state 106
+
+    (18) parameters -> id_list . COL stand_type_procedure
+    (12) id_list -> id_list . COMA ID
+
+    COL             shift and go to state 124
+    COMA            shift and go to state 20
+
+
+state 107
+
+    (44) statement_list -> statement_list SEMICOL statement .
+
+    SEMICOL         reduce using rule 44 (statement_list -> statement_list SEMICOL statement .)
+    END             reduce using rule 44 (statement_list -> statement_list SEMICOL statement .)
+
+
+state 108
+
+    (58) for_statement -> for_id ASSIG expression to_downto . expression for_do statement
+    (72) expression -> . simple_expression comparison_operator simple_expression
+    (73) expression -> . simple_expression
+    (74) expression -> . bool_value
+    (85) simple_expression -> . term additional_oper_list
+    (65) bool_value -> . TRUE
+    (66) bool_value -> . FALSE
+    (91) term -> . factor factor_list
+    (96) factor -> . real_number
+    (97) factor -> . ID
+    (98) factor -> . LP expression RP
+    (99) factor -> . NOT factor
+    (31) real_number -> . num
+    (32) real_number -> . num dot num
+    (33) num -> . NUMBER
+
+    TRUE            shift and go to state 71
+    FALSE           shift and go to state 72
+    ID              shift and go to state 75
+    LP              shift and go to state 76
+    NOT             shift and go to state 77
+    NUMBER          shift and go to state 79
+
+    expression                     shift and go to state 125
+    simple_expression              shift and go to state 68
+    bool_value                     shift and go to state 69
+    term                           shift and go to state 70
+    factor                         shift and go to state 73
+    real_number                    shift and go to state 74
+    num                            shift and go to state 78
+
+state 109
+
+    (77) to_downto -> TO .
+
+    TRUE            reduce using rule 77 (to_downto -> TO .)
+    FALSE           reduce using rule 77 (to_downto -> TO .)
+    ID              reduce using rule 77 (to_downto -> TO .)
+    LP              reduce using rule 77 (to_downto -> TO .)
+    NOT             reduce using rule 77 (to_downto -> TO .)
+    NUMBER          reduce using rule 77 (to_downto -> TO .)
+
+
+state 110
+
+    (78) to_downto -> DOWNTO .
+
+    TRUE            reduce using rule 78 (to_downto -> DOWNTO .)
+    FALSE           reduce using rule 78 (to_downto -> DOWNTO .)
+    ID              reduce using rule 78 (to_downto -> DOWNTO .)
+    LP              reduce using rule 78 (to_downto -> DOWNTO .)
+    NOT             reduce using rule 78 (to_downto -> DOWNTO .)
+    NUMBER          reduce using rule 78 (to_downto -> DOWNTO .)
+
+
+state 111
+
+    (61) conditional_statement -> if_part expression then_part statement . else_part
+    (62) conditional_statement -> if_part expression then_part statement .
+    (67) else_part -> . else statement
+    (68) else -> . ELSE
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    SEMICOL         reduce using rule 62 (conditional_statement -> if_part expression then_part statement .)
+    END             reduce using rule 62 (conditional_statement -> if_part expression then_part statement .)
+    ELSE            shift and go to state 128
+
+  ! ELSE            [ reduce using rule 62 (conditional_statement -> if_part expression then_part statement .) ]
+
+    else_part                      shift and go to state 126
+    else                           shift and go to state 127
+
+state 112
+
+    (72) expression -> simple_expression comparison_operator simple_expression .
+
+    THEN            reduce using rule 72 (expression -> simple_expression comparison_operator simple_expression .)
+    TO              reduce using rule 72 (expression -> simple_expression comparison_operator simple_expression .)
+    DOWNTO          reduce using rule 72 (expression -> simple_expression comparison_operator simple_expression .)
+    SEMICOL         reduce using rule 72 (expression -> simple_expression comparison_operator simple_expression .)
+    END             reduce using rule 72 (expression -> simple_expression comparison_operator simple_expression .)
+    ELSE            reduce using rule 72 (expression -> simple_expression comparison_operator simple_expression .)
+    RP              reduce using rule 72 (expression -> simple_expression comparison_operator simple_expression .)
+    DO              reduce using rule 72 (expression -> simple_expression comparison_operator simple_expression .)
+
+
+state 113
+
+    (86) additional_oper_list -> additional_oper_list additional_oper . term
+    (91) term -> . factor factor_list
+    (96) factor -> . real_number
+    (97) factor -> . ID
+    (98) factor -> . LP expression RP
+    (99) factor -> . NOT factor
+    (31) real_number -> . num
+    (32) real_number -> . num dot num
+    (33) num -> . NUMBER
+
+    ID              shift and go to state 75
+    LP              shift and go to state 76
+    NOT             shift and go to state 77
+    NUMBER          shift and go to state 79
+
+    term                           shift and go to state 129
+    factor                         shift and go to state 73
+    real_number                    shift and go to state 74
+    num                            shift and go to state 78
+
+state 114
+
+    (88) additional_oper -> MINUS .
+
+    ID              reduce using rule 88 (additional_oper -> MINUS .)
+    LP              reduce using rule 88 (additional_oper -> MINUS .)
+    NOT             reduce using rule 88 (additional_oper -> MINUS .)
+    NUMBER          reduce using rule 88 (additional_oper -> MINUS .)
+
+
+state 115
+
+    (89) additional_oper -> PLUS .
+
+    ID              reduce using rule 89 (additional_oper -> PLUS .)
+    LP              reduce using rule 89 (additional_oper -> PLUS .)
+    NOT             reduce using rule 89 (additional_oper -> PLUS .)
+    NUMBER          reduce using rule 89 (additional_oper -> PLUS .)
+
+
+state 116
+
+    (90) additional_oper -> OR .
+
+    ID              reduce using rule 90 (additional_oper -> OR .)
+    LP              reduce using rule 90 (additional_oper -> OR .)
+    NOT             reduce using rule 90 (additional_oper -> OR .)
+    NUMBER          reduce using rule 90 (additional_oper -> OR .)
+
+
+state 117
+
+    (92) factor_list -> factor_list and_div_oper . factor
+    (96) factor -> . real_number
+    (97) factor -> . ID
+    (98) factor -> . LP expression RP
+    (99) factor -> . NOT factor
+    (31) real_number -> . num
+    (32) real_number -> . num dot num
+    (33) num -> . NUMBER
+
+    ID              shift and go to state 75
+    LP              shift and go to state 76
+    NOT             shift and go to state 77
+    NUMBER          shift and go to state 79
+
+    factor                         shift and go to state 130
+    real_number                    shift and go to state 74
+    num                            shift and go to state 78
+
+state 118
+
+    (94) and_div_oper -> DIV .
+
+    ID              reduce using rule 94 (and_div_oper -> DIV .)
+    LP              reduce using rule 94 (and_div_oper -> DIV .)
+    NOT             reduce using rule 94 (and_div_oper -> DIV .)
+    NUMBER          reduce using rule 94 (and_div_oper -> DIV .)
+
+
+state 119
+
+    (95) and_div_oper -> AND .
+
+    ID              reduce using rule 95 (and_div_oper -> AND .)
+    LP              reduce using rule 95 (and_div_oper -> AND .)
+    NOT             reduce using rule 95 (and_div_oper -> AND .)
+    NUMBER          reduce using rule 95 (and_div_oper -> AND .)
+
+
+state 120
+
+    (98) factor -> LP expression RP .
+
+    DIV             reduce using rule 98 (factor -> LP expression RP .)
+    AND             reduce using rule 98 (factor -> LP expression RP .)
+    MINUS           reduce using rule 98 (factor -> LP expression RP .)
+    PLUS            reduce using rule 98 (factor -> LP expression RP .)
+    OR              reduce using rule 98 (factor -> LP expression RP .)
+    LT              reduce using rule 98 (factor -> LP expression RP .)
+    GT              reduce using rule 98 (factor -> LP expression RP .)
+    LOREQ           reduce using rule 98 (factor -> LP expression RP .)
+    GOREQ           reduce using rule 98 (factor -> LP expression RP .)
+    EQ              reduce using rule 98 (factor -> LP expression RP .)
+    THEN            reduce using rule 98 (factor -> LP expression RP .)
+    TO              reduce using rule 98 (factor -> LP expression RP .)
+    DOWNTO          reduce using rule 98 (factor -> LP expression RP .)
+    SEMICOL         reduce using rule 98 (factor -> LP expression RP .)
+    END             reduce using rule 98 (factor -> LP expression RP .)
+    ELSE            reduce using rule 98 (factor -> LP expression RP .)
+    RP              reduce using rule 98 (factor -> LP expression RP .)
+    DO              reduce using rule 98 (factor -> LP expression RP .)
+
+
+state 121
+
+    (32) real_number -> num dot num .
+
+    DIV             reduce using rule 32 (real_number -> num dot num .)
+    AND             reduce using rule 32 (real_number -> num dot num .)
+    MINUS           reduce using rule 32 (real_number -> num dot num .)
+    PLUS            reduce using rule 32 (real_number -> num dot num .)
+    OR              reduce using rule 32 (real_number -> num dot num .)
+    LT              reduce using rule 32 (real_number -> num dot num .)
+    GT              reduce using rule 32 (real_number -> num dot num .)
+    LOREQ           reduce using rule 32 (real_number -> num dot num .)
+    GOREQ           reduce using rule 32 (real_number -> num dot num .)
+    EQ              reduce using rule 32 (real_number -> num dot num .)
+    THEN            reduce using rule 32 (real_number -> num dot num .)
+    TO              reduce using rule 32 (real_number -> num dot num .)
+    DOWNTO          reduce using rule 32 (real_number -> num dot num .)
+    SEMICOL         reduce using rule 32 (real_number -> num dot num .)
+    END             reduce using rule 32 (real_number -> num dot num .)
+    ELSE            reduce using rule 32 (real_number -> num dot num .)
+    RP              reduce using rule 32 (real_number -> num dot num .)
+    DO              reduce using rule 32 (real_number -> num dot num .)
+
+
+state 122
+
+    (17) procedure_header -> PROCEDURE ID LP parameters parameters_list . RP
+    (19) parameters_list -> parameters_list . SEMICOL parameters
+
+    RP              shift and go to state 131
+    SEMICOL         shift and go to state 132
+
+
+state 123
+
+    (20) parameters_list -> empty .
+
+    RP              reduce using rule 20 (parameters_list -> empty .)
+    SEMICOL         reduce using rule 20 (parameters_list -> empty .)
+
+
+state 124
+
+    (18) parameters -> id_list COL . stand_type_procedure
+    (21) stand_type_procedure -> . CHAR
+    (22) stand_type_procedure -> . INTEGER
+    (23) stand_type_procedure -> . REAL
+    (24) stand_type_procedure -> . BOOLEAN
+
+    CHAR            shift and go to state 134
+    INTEGER         shift and go to state 135
+    REAL            shift and go to state 136
+    BOOLEAN         shift and go to state 137
+
+    stand_type_procedure           shift and go to state 133
+
+state 125
+
+    (58) for_statement -> for_id ASSIG expression to_downto expression . for_do statement
+    (79) for_do -> . DO
+
+    DO              shift and go to state 48
+
+    for_do                         shift and go to state 138
+
+state 126
+
+    (61) conditional_statement -> if_part expression then_part statement else_part .
+
+    SEMICOL         reduce using rule 61 (conditional_statement -> if_part expression then_part statement else_part .)
+    END             reduce using rule 61 (conditional_statement -> if_part expression then_part statement else_part .)
+    ELSE            reduce using rule 61 (conditional_statement -> if_part expression then_part statement else_part .)
+
+
+state 127
+
+    (67) else_part -> else . statement
+    (49) statement -> . simple_statement
+    (50) statement -> . structured_statement
+    (51) statement -> . for_statement
+    (52) simple_statement -> . assign_statement
+    (53) simple_statement -> . empty
+    (54) structured_statement -> . operation_sub_block
+    (55) structured_statement -> . conditional_statement
+    (56) structured_statement -> . loop_statement
+    (58) for_statement -> . for_id ASSIG expression to_downto expression for_do statement
+    (48) assign_statement -> . id2 ASSIG expression
+    (100) empty -> .
+    (75) operation_sub_block -> . BEGIN statement_sequence END
+    (61) conditional_statement -> . if_part expression then_part statement else_part
+    (62) conditional_statement -> . if_part expression then_part statement
+    (57) loop_statement -> . for_do
+    (76) for_id -> . FOR ID
+    (70) id2 -> . ID
+    (63) if_part -> . IF
+    (79) for_do -> . DO
+
+    ELSE            reduce using rule 100 (empty -> .)
+    SEMICOL         reduce using rule 100 (empty -> .)
+    END             reduce using rule 100 (empty -> .)
+    BEGIN           shift and go to state 30
+    FOR             shift and go to state 45
+    ID              shift and go to state 46
+    IF              shift and go to state 47
+    DO              shift and go to state 48
+
+    statement                      shift and go to state 139
+    simple_statement               shift and go to state 33
+    structured_statement           shift and go to state 34
+    for_statement                  shift and go to state 35
+    assign_statement               shift and go to state 36
+    empty                          shift and go to state 37
+    operation_sub_block            shift and go to state 38
+    conditional_statement          shift and go to state 39
+    loop_statement                 shift and go to state 40
+    for_id                         shift and go to state 41
+    for_do                         shift and go to state 42
+    id2                            shift and go to state 43
+    if_part                        shift and go to state 44
+
+state 128
+
+    (68) else -> ELSE .
+
+    BEGIN           reduce using rule 68 (else -> ELSE .)
+    FOR             reduce using rule 68 (else -> ELSE .)
+    ID              reduce using rule 68 (else -> ELSE .)
+    IF              reduce using rule 68 (else -> ELSE .)
+    DO              reduce using rule 68 (else -> ELSE .)
+    ELSE            reduce using rule 68 (else -> ELSE .)
+    SEMICOL         reduce using rule 68 (else -> ELSE .)
+    END             reduce using rule 68 (else -> ELSE .)
+
+
+state 129
+
+    (86) additional_oper_list -> additional_oper_list additional_oper term .
+
+    MINUS           reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    PLUS            reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    OR              reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    LT              reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    GT              reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    LOREQ           reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    GOREQ           reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    EQ              reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    THEN            reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    TO              reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    DOWNTO          reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    SEMICOL         reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    END             reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    ELSE            reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    RP              reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+    DO              reduce using rule 86 (additional_oper_list -> additional_oper_list additional_oper term .)
+
+
+state 130
+
+    (92) factor_list -> factor_list and_div_oper factor .
+
+    DIV             reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    AND             reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    MINUS           reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    PLUS            reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    OR              reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    LT              reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    GT              reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    LOREQ           reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    GOREQ           reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    EQ              reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    THEN            reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    TO              reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    DOWNTO          reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    SEMICOL         reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    END             reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    ELSE            reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    RP              reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+    DO              reduce using rule 92 (factor_list -> factor_list and_div_oper factor .)
+
+
+state 131
+
+    (17) procedure_header -> PROCEDURE ID LP parameters parameters_list RP .
+
+    SEMICOL         reduce using rule 17 (procedure_header -> PROCEDURE ID LP parameters parameters_list RP .)
+
+
+state 132
+
+    (19) parameters_list -> parameters_list SEMICOL . parameters
+    (18) parameters -> . id_list COL stand_type_procedure
+    (11) id_list -> . ID
+    (12) id_list -> . id_list COMA ID
+
+    ID              shift and go to state 15
+
+    parameters                     shift and go to state 140
+    id_list                        shift and go to state 106
+
+state 133
+
+    (18) parameters -> id_list COL stand_type_procedure .
+
+    RP              reduce using rule 18 (parameters -> id_list COL stand_type_procedure .)
+    SEMICOL         reduce using rule 18 (parameters -> id_list COL stand_type_procedure .)
+
+
+state 134
+
+    (21) stand_type_procedure -> CHAR .
+
+    RP              reduce using rule 21 (stand_type_procedure -> CHAR .)
+    SEMICOL         reduce using rule 21 (stand_type_procedure -> CHAR .)
+
+
+state 135
+
+    (22) stand_type_procedure -> INTEGER .
+
+    RP              reduce using rule 22 (stand_type_procedure -> INTEGER .)
+    SEMICOL         reduce using rule 22 (stand_type_procedure -> INTEGER .)
+
+
+state 136
+
+    (23) stand_type_procedure -> REAL .
+
+    RP              reduce using rule 23 (stand_type_procedure -> REAL .)
+    SEMICOL         reduce using rule 23 (stand_type_procedure -> REAL .)
+
+
+state 137
+
+    (24) stand_type_procedure -> BOOLEAN .
+
+    RP              reduce using rule 24 (stand_type_procedure -> BOOLEAN .)
+    SEMICOL         reduce using rule 24 (stand_type_procedure -> BOOLEAN .)
+
+
+state 138
+
+    (58) for_statement -> for_id ASSIG expression to_downto expression for_do . statement
+    (49) statement -> . simple_statement
+    (50) statement -> . structured_statement
+    (51) statement -> . for_statement
+    (52) simple_statement -> . assign_statement
+    (53) simple_statement -> . empty
+    (54) structured_statement -> . operation_sub_block
+    (55) structured_statement -> . conditional_statement
+    (56) structured_statement -> . loop_statement
+    (58) for_statement -> . for_id ASSIG expression to_downto expression for_do statement
+    (48) assign_statement -> . id2 ASSIG expression
+    (100) empty -> .
+    (75) operation_sub_block -> . BEGIN statement_sequence END
+    (61) conditional_statement -> . if_part expression then_part statement else_part
+    (62) conditional_statement -> . if_part expression then_part statement
+    (57) loop_statement -> . for_do
+    (76) for_id -> . FOR ID
+    (70) id2 -> . ID
+    (63) if_part -> . IF
+    (79) for_do -> . DO
+
+    ELSE            reduce using rule 100 (empty -> .)
+    SEMICOL         reduce using rule 100 (empty -> .)
+    END             reduce using rule 100 (empty -> .)
+    BEGIN           shift and go to state 30
+    FOR             shift and go to state 45
+    ID              shift and go to state 46
+    IF              shift and go to state 47
+    DO              shift and go to state 48
+
+    for_id                         shift and go to state 41
+    for_do                         shift and go to state 42
+    statement                      shift and go to state 141
+    simple_statement               shift and go to state 33
+    structured_statement           shift and go to state 34
+    for_statement                  shift and go to state 35
+    assign_statement               shift and go to state 36
+    empty                          shift and go to state 37
+    operation_sub_block            shift and go to state 38
+    conditional_statement          shift and go to state 39
+    loop_statement                 shift and go to state 40
+    id2                            shift and go to state 43
+    if_part                        shift and go to state 44
+
+state 139
+
+    (67) else_part -> else statement .
+
+    ELSE            reduce using rule 67 (else_part -> else statement .)
+    SEMICOL         reduce using rule 67 (else_part -> else statement .)
+    END             reduce using rule 67 (else_part -> else statement .)
+
+
+state 140
+
+    (19) parameters_list -> parameters_list SEMICOL parameters .
+
+    RP              reduce using rule 19 (parameters_list -> parameters_list SEMICOL parameters .)
+    SEMICOL         reduce using rule 19 (parameters_list -> parameters_list SEMICOL parameters .)
+
+
+state 141
+
+    (58) for_statement -> for_id ASSIG expression to_downto expression for_do statement .
+
+    SEMICOL         reduce using rule 58 (for_statement -> for_id ASSIG expression to_downto expression for_do statement .)
+    END             reduce using rule 58 (for_statement -> for_id ASSIG expression to_downto expression for_do statement .)
+    ELSE            reduce using rule 58 (for_statement -> for_id ASSIG expression to_downto expression for_do statement .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for ELSE in state 111 resolved as shift

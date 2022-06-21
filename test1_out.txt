@@ -1,0 +1,7 @@
+#include <stdio.h>
+int main() {
+int Celsius, Fahrenheit;
+Celsius = 5;
+Fahrenheit = 10;
+return 0; 
+}
