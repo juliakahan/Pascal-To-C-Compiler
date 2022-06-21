@@ -1,7 +1,7 @@
 program pascal;
 var
-Celsius, Fahrenheit: real;
+Celsius, Fahrenheit: integer;
 begin
-Celsius:=25;
-Fahrenheit := 32.0;
+Celsius := 5;
+Fahrenheit := 10
 end.

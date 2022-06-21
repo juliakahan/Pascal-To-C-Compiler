@@ -1,0 +1,350 @@
+def p_program_block(p):
+    '''
+    program_block : declarations statement opt_subprogram_declarations opt_comp_statements
+    '''
+    print("block")
+    pass
+
+
+program pascal;
+var
+Celsius, Fahrenheit: real;
+begin
+Celsius := 25;
+Fahrenheit:=32.0;
+end.
+
+
+
+def p_statement(p):
+    '''
+    statement : ID ASSIG simple_expression
+    | procedure_statement
+    | comp_statement
+    | IF expression THEN statement ELSE statement
+    | WHILE expression DO statement
+    | empty
+    '''
+    print("statement")
+    global output
+    if len(p) == 3:
+        output += p[1] + " = " + p[3]
+    if p[1] == 'if':
+        output += p[1] + " ( " + p[2] + " ) \n" + " { \n" + p[4] + "\n"  + "}\n" +  p[5] + " { \n" + p[6] + "\n"  + "}\n"
+    if p[1] == 'while':
+        output += p[1] + " ( " + p[2] + " ) \n" + " { \n" + p[4] + "\n"  + "}\n"
+
+
+#
+# def p_num(p):
+#     '''
+#     num : signed_integer
+#     | signed_integer DOT INTEGER
+#     '''
+#     global output
+#     if len(p) == 1:
+#         output += p[1]
+#     else:
+#         output += p[1] + p[2] + p[3]
+#
+#
+#
+# def p_signed_integer(p):
+#     '''
+#     signed_integer : MINUS INTEGER
+#     | INTEGER
+#     '''
+#     global output
+#     output += "-" + p[2]
+#
+#
+#
+#
+# def p_subprogram_declarations(p):
+#     '''
+#     subprogram_declarations : subprogram_declarations subprogram_declaration SEMICOL
+#     | opt_subprogram_declarations
+#     '''
+#     pass
+#
+#
+# def p_subprogram_declaration(p):
+#     '''
+#     subprogram_declaration : subprogram_head declarations comp_statement
+#     | declarations
+#     | comp_statement
+#
+#     '''
+#     if len(p) == 3:
+#         p[0] = p[1] + p[2] + p[3]
+#     elif len(p) == 1:
+#         p[0] = p[1]
+#
+#
+# def p_subprogram_head(p):
+#     '''
+#     subprogram_head : function_id arguments COL standard_type SEMICOL
+#     | program_id arguments SEMICOL
+#     '''
+#     pass
+#
+#
+#
+# def p_standard_type(p):
+#     '''
+#     standard_type : INTEGER
+#     | REAL
+#     '''
+#     global output
+#     if p[1] == 'integer':
+#         output += "int "
+#     else:
+#         output += " double"
+#
+#
+#
+# def p_sign(p):
+#     '''
+#     sign : PLUS
+#     | MINUS
+#     '''
+#      if len(statements_list) > 0:
+#         statements_list[-1] = statements_list[-1] + str(p[1])
+#
+#
+# def p_logic_operator(p):
+#     '''
+#     logic_operator : OR
+#     | AND
+#     '''
+#     global output
+#     output += p[1]
+#
+#
+# def p_logic_statement(p):
+#     '''
+#     logic_statement : comparison
+#     | BOOLEAN
+#     '''
+#     global output
+#     output += p[1]
+#
+#
+#
+#
+# def p_function_id(p):
+#     '''
+#     function_id : ID
+#     '''
+#     global output
+#     output += p[1] + " "
+#
+#
+# def p_arguments(p):
+#     '''
+#     arguments : LP parameter_list RP
+#     '''
+#     p[0] = p[1] + p[2] + p[3]
+#
+#
+#
+# def p_parameter_list(p):
+#     '''
+#
+#     parameter_list : ID_list COL type
+#     '''
+#     global output
+#     for id in ID_list:
+#         if ID_list[len(ID_list) - 1] == id:
+#             output += p[3] + " " + id
+#         else:
+#             output += p[3] + " " + id + ", "
+#
+#
+#
+#
+#
+
+
+#     print("hi")
+#     global output, function_name
+#
+#     output += "int main()\n"
+#     output += "{\n"
+#     for st in statements_list:
+#         output += "\t" + st + "\n"
+#     output += "}\n"
+#     statements_list.clear()
+#
+#
+
+#
+#
+# def p_procedure_statement(p):
+#     '''
+#     procedure_statement : ID
+#     | ID LP expression_list RP
+#     '''
+#     global output
+#     if(len(p) == 1):
+#         output += p[1]
+#
+#
+# def p_simple_expression(p):
+#     '''
+#     simple_expression : simple_expression PLUS term
+#     | sign term
+#     | term
+#     '''
+#     global output
+#     if(len(p) == 1):
+#         output += p[1]
+#     elif(len(p) == 2):
+#         output += p[1] + p[2]
+#     elif(len(p) == 3):
+#        output += p[1] + p[2] + p[3]
+#
+# def p_expression(p):
+#     '''
+#     expression : simple_expression EQ simple_expression
+#     | simple_expression
+#     '''
+#     global output
+#     if(len(p) == 1):
+#         for var in p[1]:
+#             output += var + " "
+#     elif (len(p) == 3):
+#         for var in p[1]:
+#             output += var + " "
+#         output += " = "
+#         for var in p[3]:
+#             output += var + " "
+#
+#
+#
+# def p_expression_list(p):
+#     '''
+#     expression_list : expression
+#     | expression_list COMA expression
+#     '''
+#     global output
+#     if(len(p) == 1):
+#         output += p[1]
+#     elif(len(p) == 3):
+#         output += p[1] + p[2] + p[3]
+#
+#
+# def p_to_expression(p):
+#     '''
+#     to_expression : TO
+#     | DOWNTO
+#     '''
+#     pass
+#
+#
+# def p_for(p):
+#     '''
+#     for : FOR ID ASSIG expression to_expression expression
+#     '''
+#     global output
+#     output += p[1] + " ( " + " int " + p[2] + " = " + p[4] + ", " + p[2] + " <=" + p[6] + " , " + p[2] + "++" + " )\n " + "{\n" + "}\n"
+#
+#
+#
+# def p_term(p):
+#     '''
+#     term : factor
+#     | term MULTIPLY factor
+#     '''
+#     global output
+#     if(len(p) == 1):
+#         output += p[1]
+#     elif(len(p) == 3):
+#         output += p[1] + " * " + p[3]
+#
+#
+#
+# def p_factor(p):
+#     '''
+#     factor : ID
+#     | ID LP expression_list RP
+#     | num
+#     | LP expression RP
+#     | NOT factor
+#     '''
+#     global output
+#     if(len(p) == 1):
+#         output += p[1]
+#     elif(len(p) == 2):
+#         output += p[1] + p[2]
+#     elif(len(p) == 3):
+#         output += "(" + p[1] + p[2] + ")"
+#
+#
+#
+# def p_comparison_operator(p):
+#     '''
+#     comparison_operator : LT
+#     | GT
+#     | LOREQ
+#     | GOREQ
+#     | EQ
+#     '''
+#     global output
+#     output += p[1]
+
+#
+# def p_comparison(p):
+#     '''
+#     comparison : num comp_operator num
+#     '''
+#     global output
+#     output += p[1] + " " + p[2] + " " + p[3]
+#
+#
+#
+# def p_statement_logic_operators(p):
+#     '''
+#     statement_logic_operators : logic_operator
+#     | AND THEN
+#     | OR ELSE
+#     '''
+#     global output
+#
+#     if(len(p) == 1):
+#         output += p[1]
+#     elif(len(p) == 2):
+#         output += p[1] + " " + p[2]
+# # def p_error(p):
+# #     print("Syntax error at '%s'\n" % p.value)
+# #     global wasError
+# #     wasError = True
+#
+# def p_logic_condition(p):
+#     '''
+#     logic_condition : NOT LP logic_statement statement_logic_operators logic_statement RP
+#     | LP logic_statement statement_logic_operators logic_statement RP
+#     '''
+#     global output
+#     if(len(p) == 6):
+#         output += "! " + p[2] + p[3] + p[4] + p[5] + p[6]
+#     elif(len(p) == 5):
+#         output += p[1] + p[2] + p[3] + p[4] + p[5]
+
+
+
+
+# def p_opt_subprogram_declarations(p):
+#     '''
+#     opt_subprogram_declarations : subprogram_declarations
+#     | empty
+#     '''
+#     print("subprgr_decl")
+#     pass
+#
+#
+# def p_opt_comp_statements(p):
+#     '''
+#     opt_comp_statements : comp_statement
+#     | empty
+#     '''

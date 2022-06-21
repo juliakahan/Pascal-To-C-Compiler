@@ -1,9 +1,8 @@
-VAR
-MyAge    : BYTE;
-Comments : STRING;
-BEGIN
+program pascal;
+var
+MyAge    : integer;
+RealNumber : integer;
+begin
 MyAge:=22;
-Comments:='Hi, there ! I'm learning Pascal';
-WRITELN('I am ',MyAge,' years old');
-WRITELN(Comments);
-END.
+Comments := 15
+end.

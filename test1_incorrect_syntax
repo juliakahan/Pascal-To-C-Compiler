@@ -1,9 +1,5 @@
 program cel
 var
 Celsius,  Fahrenheit: real;
-begin
-write('Enter  Degrees C: ');
-read(Celsius);
-Fahrenheit :=  (9.0 / 5.0) * Celsius + 32.0;
-write('Fahrenheit  is ');
-writeFahrenheit);
+Fahrenheit :=  32.0;
+end.

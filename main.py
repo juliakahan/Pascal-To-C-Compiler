@@ -51,7 +51,6 @@ reserved = {
         'writeln': 'WRITELN',
         'lineend': 'LINEEND',
         'sqrt': 'SQRT',
-        'text': 'TEXT',
         'dispose': 'DISPOSE',
         'integer': 'INTEGER',
         'char': 'CHAR',
@@ -93,6 +92,8 @@ tokens = [
         'COL',
         'LCURLBR',
         'RCURLBR',
+        'TEXT',
+        'NUMBER'
 
 ] + list(reserved.values())
 #'LCOMM', 'RCOMM', 'LGROUP', 'RGROUP',
@@ -145,13 +146,24 @@ t_REAL = r'((\+|-)?([0-9]+)(\.[0-9]+)?)|((\+|-)?\.?[0-9]+)'
 t_BOOLEAN = r'(true|false)'
 t_EMPTY = r'""'
 
+
+def t_NUMBER(t):
+    r"""[0-9][0-9]*"""
+    t.value = int(t.value)
+    return t
+
+
 def t_newline(t):
-    r"""\n+"""
+    r'''\n+'''
     t.lexer.lineno += len(t.value)
 
 def t_ID(t):
-    r"""[a-zA-Z][a-zA-Z0-9]*"""
+    r'''[a-zA-Z][a-zA-Z0-9]*'''
     t.type = reserved.get(t.value, 'ID')
+    return t
+
+def t_TEXT(t):
+    r'''\'[^\'\n]*\''''
     return t
 
 t_ignore = '  \t'
@@ -167,15 +179,22 @@ with open('test1_correct_syntax') as f:
 content = "".join(lines)
 
 lexer.input(content)
+for token in lexer:
+    print("line %d: %s(%s)" %(token.lineno, token.type, token.value))
 
 
-
-c_Code = ""
+C_code = ""
 ID_list = []
 declar = []
 subprogram_decl = []
 comp_stats = []
 list_statement = []
+statements_list = []
+id_decl = {}
+type_decl = {}
+procedure_type = []
+temp_ID_list = []
+function_name=""
 
 
 
@@ -186,16 +205,8 @@ def p_pascal_program(p):
     '''
     pascal_program : program_id SEMICOL program_block DOT
     '''
-
-    global output
-
-    # if(len(p == 7 ):
-    #     p[0] = p[1] + p[2] + p[3] + p[4] + p[5] + p[6] + p[7]
-    # elif(len(p == 4):
-    #     p[0] = p[1] + p[2] + p[3] + p[4]
-    # global c_Code
-    # c_Code = p[0]
-# program_id LBR id_list RBR SEMICOL program_block DOT
+    print("program")
+    pass
 
 
 def p_program_id(p):
@@ -203,30 +214,46 @@ def p_program_id(p):
     program_id : PROGRAM ID
      '''
     global output
-    output += "//Program: " + p[2] + "\n"
     output += "#include <stdio.h>\n"
+    output += "int main() {\n"
+    print("programID")
 
-
-
-
-
-def p_id_list(p):
+def p_type_denoter(p):
     '''
-        id_list : id_list COMA ID
-        | ID
+    type_denoter : stand_type
+    | id1
+    '''
+    pass
+def p_record_section(p):
+    '''
+    record_section : id_list COL type_denoter
+    '''
+    global outputstr
+    for i in ID_list:
+        if i != ID_list[-1]:
+            outputstr += i + ", "  # , end=", ")
+        else:
+            outputstr += i + ";\n"  # ", end=";\n")
+    ID_list.clear()
+    print("record_section")
+
+def p_var_decl(p):
+    '''
+        var_decl : ID
+        | id_list COMA ID
         '''
     global output
-    if (p.length == 3):
+    if len(p) == 3:
         for id in [p[1]]:
             ID_list.append(id)
             if [p[len(p) - 1]] == id:
                 output += id
             else:
                 output += id + ","
-
-    elif (p.length == 1):
+    elif len(p) == 1:
         ID_list.append(p[1])
         output += p[1]
+    print("programIDLIST")
 
 
 
@@ -240,125 +267,8 @@ def p_id_list(p):
 
 
 
-def p_opt_declarations(p):
-    '''
-    opt_declarations : declarations
-    | EMPTY
-    '''
-    pass
-
-
-def p_opt_subprogram_declarations(p):
-    '''
-    opt_subprogram_declarations : subprogram_declarations
-    | EMPTY
-    '''
-    pass
-
-
-def p_opt_comp_statements(p):
-    '''
-    opt_comp_statements : comp_statement
-    | EMPTY
-    '''
-    pass
-
 
 #======================================================================================================================================================
-
-def p_program_block(p):
-    '''
-    program_block : opt_declarations opt_subprogram_declarations opt_comp_statements
-    '''
-    pass
-
-def p_declarations(p):
-    '''
-    declarations : VAR id_list COL type SEMICOL
-    | opt_declarations
-    '''
-    global output
-
-    if(len(p) == 5):
-        output += ID_list[0].type
-        for id in ID_list:
-            if ID_list[len(ID_list) - 1] == id:
-                output += id + ";\n"
-            else:
-                output += id + ","
-
-    pass
-
-def p_type(p):
-    '''
-    type : standard_type
-    '''
-    p[0] = p[1]
-
-
-
-def p_num(p):
-    '''
-    num : signed_integer
-    | signed_integer DOT INTEGER
-    '''
-    global output
-    if len(p) == 1:
-        output += p[1]
-    else:
-        output += p[1] + p[2] + p[3]
-
-
-
-def p_signed_integer(p):
-    '''
-    signed_integer : MINUS INTEGER
-    | INTEGER
-    '''
-    global output
-    output += "-" + p[2]
-
-
-
-def p_subprogram_declarations(p):
-    '''
-    subprogram_declarations : subprogram_declarations subprogram_declaration SEMICOL
-    | opt_subprogram_declarations
-    '''
-    pass
-
-
-def p_subprogram_declaration(p):
-    '''
-    subprogram_declaration : subprogram_head declarations comp_statement
-
-    '''
-    if (len(p) == 3):
-        p[0] = p[1] + p[2] + p[3]
-    elif (len(p) == 1):
-        p[0] = p[1]
-
-
-def p_subprogram_head(p):
-    '''
-    subprogram_head : function_id arguments COL standard_type SEMICOL
-    | program_id arguments SEMICOL
-    '''
-    pass
-
-
-
-def p_standard_type(p):
-    '''
-    standard_type : INTEGER
-    | REAL
-    '''
-    global output
-    if p[1] == 'integer':
-        output += "int "
-    else:
-        output += " double"
-
 
 
 def p_sign(p):
@@ -366,89 +276,268 @@ def p_sign(p):
     sign : PLUS
     | MINUS
     '''
+    if len(statements_list) > 0:
+        statements_list[-1] = statements_list[-1] + str(p[1])
+
+
+def p_real_number(p):
+    '''
+    real_number : num
+    | num dot num
+    '''
+
+
+def p_num(p):
+    '''
+    num : NUMBER
+    '''
+
+    if len(statements_list) > 0:
+        statements_list[-1] = statements_list[-1] + str(p[1])
+
+
+def p_dot(p):
+    '''
+    dot : DOT
+    '''
+    if len(statements_list) > 0:
+        statements_list[-1] = statements_list[-1] + str(p[1])
+
+
+
+def p_types(p):
+    '''
+    types : stand_type
+    | id1
+    '''
+    pass
+
+
+
+def p_stand_type(p):
+    '''
+    stand_type :  CHAR
+    | INTEGER
+    | REAL
+    | BOOLEAN
+    | TEXT
+    '''
+    global output, varType
+    if p[1] == 'integer':
+        output += "int "
+        varType = "int"
+    elif p[1] == 'real':
+        output += "double "
+        varType = "double"
+    elif p[1] == 'char':
+        output += "char "
+        varType = "char"
+    elif p[1] == 'boolean':
+        output += "bool "
+        varType = "bool"
+    elif p[1] == 'string':
+        output += "char "
+        varType = "char*"
+    print("var_type")
+
+
+
+def p_end_sign(p):
+    '''
+    record_end :
+    | END
+   '''
     global output
-    output += p[1]
+    output += "return 0; \n"
+    output += "}"
+    print("end")
 
 
-def p_logic_operator(p):
+
+
+
+def p_program_block(p):
     '''
-    logic_operator : OR
-    | AND
+    program_block : variable_block procedure_block operation_block
+    '''
+    print("block")
+    pass
+
+
+def p_declared_type_block(p):
+    '''
+    declared_type_block : TYPE id_list
+    | empty
+    '''
+    print("type_block")
+    pass
+
+def p_variable_block(p):
+    '''
+    variable_block : VAR var_decl var_decl_list
+    | empty
+    '''
+    print("var_block")
+    pass
+
+def p_var_decl(p):
+    '''
+    var_decl : id_list COL type_denoter SEMICOL
     '''
     global output
-    output += p[1]
+    for i in ID_list:
+        if i != ID_list[-1]:
+            if varType == "char*":
+                output += "char "+ i + "[50], "
+            else:
+                output += i + ", "
+        else:
+            if varType == "char*":
+                output += "char "+ i + "[50];\n"
+            else:
+                output += i + ";\n"
+        id_decl[str(i)] = varType
 
+    ID_list.clear()
+    print("id_decl")
 
-def p_logic_statement(p):
+def p_var_decl_list(p):
     '''
-    logic_statement : comparison
+    var_decl_list : var_decl_list var_decl
+    | empty
+    '''
+    pass
+
+def p_id_list(p):
+    '''
+    id_list : ID
+    | id_list COMA ID
+    '''
+    if p[1] is not None:
+        ID_list.append(p[1])
+    else:
+        ID_list.append(p[3])
+
+def p_procedure_block(p):
+    '''
+    procedure_block : procedure_block procedure
+    | empty
+    '''
+    pass
+
+def p_procedure(p):
+    '''
+    procedure : procedure_header SEMICOL procedure_block SEMICOL
+    '''
+
+
+def p_procedure_header(p):
+    '''
+    procedure_header : PROCEDURE ID
+    | PROCEDURE ID LP parameters parameters_list RP
+    '''
+    global output
+    output += "void " + p[2] + "("  # ,end="")
+    for i in temp_ID_list:
+        if i != temp_ID_list[-1]:
+            output += i + ", "  # ,end=", ")
+        else:
+            output += i  # , end="")
+    output += ")" + "\n"  # , end="\n")
+    temp_ID_list.clear()
+    procedure_type.clear()
+    ID_list.clear()
+
+
+def p_parameters(p):
+    '''
+    parameters : id_list COL stand_type_pf
+    '''
+    id_pom = []
+    for i in ID_list:
+        st = procedure_type[-1] + " " + i
+        id_pom.append(st)
+    ID_list.clear()
+    for i in id_pom:
+        ID_list.append(i)
+    procedure_type.clear()
+    print("param")
+
+
+def p_parameters_list(p):
+    '''
+    parameters_list : parameters_list SEMICOL parameters
+    | empty
+    '''
+    for i in ID_list:
+        temp_ID_list.append(i)
+    ID_list.clear()
+
+
+def p_stand_type_pf(p):
+    '''
+    stand_type_pf : CHAR
+    | INTEGER
+    | REAL
     | BOOLEAN
     '''
-    global output
-    output += p[1]
+    if p[1] == 'char':
+        procedure_type.append("char")
+    if p[1] == 'integer':
+        procedure_type.append("int")
+    elif p[1] == 'real':
+        procedure_type.append("double")
+    elif p[1] == 'boolean':
+        procedure_type.append("bool")
+    print("stand_type")
 
 
-def p_function_id(p):
+
+
+
+
+# def p_declarations(p):
+#     '''
+#     declarations : VAR ID_list COL type SEMICOL
+#     | opt_declarations
+#     '''
+#     global output
+# #
+#     if(len(p) == 5):
+#         output += ID_list[0].type
+#         for id in ID_list:
+#             if ID_list[len(ID_list) - 1] == id:
+#                 output += id + ";\n"
+#             else:
+#                 output += id + ","
+#     print("DECLARATION")
+#     pass
+#
+# def p_type(p):
+#     '''
+#     type : standard_type
+#     '''
+#     p[0] = p[1]
+#     print("type")
+#
+#
+def p_statement_sequence(p):
     '''
-    function_id : ID
+    statement_sequence : statement statement_list
     '''
-    global output
-    output += p[1] + " "
-
-
-def p_arguments(p):
-    '''
-    arguments : LP parameter_list RP
-    '''
-    p[0] = p[1] + p[2] + p[3]
-
-
-
-def p_parameter_list(p):
-    '''
-
-    parameter_list : id_list COL type
-    '''
-    global output
-    for id in ID_list:
-        if ID_list[len(ID_list) - 1] == id:
-            output += p[3] + " " + id
-        else:
-            output += p[3] + " " + id + ", "
-
-
-
-
-
-def p_comp_statement(p):
-    '''
-    comp_statement : BEGIN optional_statements END
-    '''
-    global output
-    output += p[2]
-    print("atu")
-
-
-def p_optional_statements(p):
-    '''
-    optional_statements : statement_list
-    '''
-    p[0] = p[1]
-
+    pass
 
 def p_statement_list(p):
     '''
 
-    statement_list : statement
-    | statement_list SEMICOL statement
+    statement_list : statement_list SEMICOL statement
+    | empty
     '''
-    if p[1] is not None:
-        ID_list.append(p[1])
-
-    else:
-        ID_list.append(p[3])
-
-
+    # if p[1] is not None:
+    #     ID_list.append(p[1])
+    #
+    # else:
+    #     ID_list.append(p[3])
 
 
 def p_variable(p):
@@ -456,196 +545,415 @@ def p_variable(p):
     variable : ID
     | ID LBR expression RBR
     '''
+    print("variable")
     global output
-    if(len(p) == 1):
+    if len(p) == 1:
         output += p[1]
-    elif(len(p) == 4):
+    elif len(p) == 4:
         output += p[1] + " (" + p[3] + ") "
 
-    print("variable")
 
+
+def p_assign_statement(p):
+    '''
+    assign_statement : id2 ASSIG expression
+    '''
+    if len(statements_list) > 0:
+        statements_list[-1] = statements_list[-1] + ";"
+    print("assign statement")
 
 def p_statement(p):
     '''
-    statement : variable ASSIG expression
-    | procedure_statement
-    | comp_statement
-    | IF expression THEN statement ELSE statement
-    | WHILE expression DO statement
+    statement : simple_statement
+    | structured_statement
     '''
-    global output
-    if len(p) == 3:
-        output += p[1] + " = " + p[3]
-    if p[1] == 'if':
-        output += p[1] + " ( " + p[2] + " ) \n" + " { \n" + p[4] + "\n"  + "}\n" +  p[5] + " { \n" + p[6] + "\n"  + "}\n"
-    if p[1] == 'while':
-        output += p[1] + " ( " + p[2] + " ) \n" + " { \n" + p[4] + "\n"  + "}\n"
+    pass
+    print("statement")
 
-
-def p_procedure_statement(p):
+def p_simple_statement(p):
     '''
-    procedure_statement : ID
-    | ID LP expression_list RP
+    simple_statement : assign_statement
+    | empty
     '''
-    global output
-    if(len(p) == 1):
-        output += p[1]
+    print("simple statement")
 
-
-def p_simple_expression(p):
+#| procedure_statement
+def p_structured_statement(p):
     '''
-    simple_expression : simple_expression PLUS term
-    | sign term
-    | term
-    '''
-    global output
-    if(len(p) == 1):
-        output += p[1]
-    elif(len(p) == 2):
-        output += p[1] + p[2]
-    elif(len(p) == 3):
-       output += p[1] + p[2] + p[3]
-
-def p_expression(p):
-    '''
-    expression : simple_expression EQ simple_expression
-    | simple_expression
-    '''
-    global output
-    if(len(p) == 1):
-        for var in p[1]:
-            output += var + " "
-    elif (len(p) == 3):
-        for var in p[1]:
-            output += var + " "
-        output += " = "
-        for var in p[3]:
-            output += var + " "
-
-
-
-def p_expression_list(p):
-    '''
-    expression_list : expression
-    | expression_list COMA expression
-    '''
-    global output
-    if(len(p) == 1):
-        output += p[1]
-    elif(len(p) == 3):
-        output += p[1] + p[2] + p[3]
-
-
-def p_to_expression(p):
-    '''
-    to_expression : TO
-    | DOWNTO
+    structured_statement : operation_sub_block
+    | conditional_statement
+    | loop_statement
     '''
     pass
 
 
-def p_for(p):
+def p_loop_statement(p):
     '''
-    for : FOR ID ASSIG expression to_expression expression
+    loop_statement : for_do
+    '''
+
+
+
+def p_for_statement(p):
+    '''for_statement : for_id ASSIG expression to_downto expression for_do statement'''
+    pass
+
+
+def p_comp_statement(p):
+    '''
+    comp_statement : BEGIN statement_sequence SEMICOL END
+    '''
+    if len(statements_list) > 0:
+        statements_list[-1] = statements_list[-1]  #+ "\n\t}"
+    print("comp")
+
+def p_operation_block(p):
+    '''
+   operation_block : BEGIN statement_sequence END
+    '''
+    global output, function_name
+
+   # output += "{\n"
+    for st in statements_list:
+        output +=  st + "\n"
+    if function_name != "":
+        output += "return "+function_name+";\n"
+        function_name=""
+    output += "return 0; \n"
+    output += "}\n"
+    statements_list.clear()
+    print("op_block")
+
+def p_conditional_statement(p):
+    '''
+    conditional_statement : if_part expression then_part statement else_part
+    | if_part expression then_part statement
+    '''
+    pass
+
+def p_if_part(p):
+    '''
+    if_part : IF
+    '''
+    if len(statements_list) > 0 and len(statements_list[-1]) > 6 and statements_list[-1][-4:] == 'else':
+        statements_list[-1]  =  str(statements_list[-1]).replace("else", "else if(")
+    else:
+        statements_list.append("if (")
+
+def p_then_part(p):
+    '''
+    then_part : THEN
+    '''
+    if len(statements_list) > 0:
+        statements_list[-1] = statements_list[-1] + ")"
+
+
+def p_else_part(p):
+    '''
+    else_part : else statement
+    '''
+    pass
+
+
+def p_else(p):
+    '''
+    else : ELSE
+    '''
+    if len(statements_list) > 0:
+        statements_list[-1] = statements_list[-1] + "\n\telse"
+
+
+
+
+
+
+def p_id1(p):
+    '''
+    id1 : ID
     '''
     global output
-    output += p[1] + " ( " + " int " + p[2] + " = " + p[4] + ", " + p[2] + " <=" + p[6] + " , " + p[2] + "++" + " )\n " + "{\n" + "}\n"
+    output += p[1] + " "
 
 
-
-def p_term(p):
+def p_id2(p):
     '''
-    term : factor
-    | term MULTIPLY factor
+    id2 : ID
     '''
-    global output
-    if(len(p) == 1):
-        output += p[1]
-    elif(len(p) == 3):
-        output += p[1] + " * " + p[3]
+    if len(statements_list) > 0 and statements_list[-1][-1] == "\t":
+        statements_list[-1] = statements_list[-1] + str(p[1])+" = "
+    else:
+        statements_list.append(str(p[1]) + " = ")
 
-
-
-def p_factor(p):
+def p_id3(p):
     '''
-    factor : ID
-    | ID LP expression_list RP
-    | num
-    | LP expression RP
-    | NOT factor
+    id3 : ID
     '''
-    global output
-    if(len(p) == 1):
-        output += p[1]
-    elif(len(p) == 2):
-        output += p[1] + p[2]
-    elif(len(p) == 3):
-        output += "(" + p[1] + p[2] + ")"
+    statements_list.append(str(p[1]) + "(")
 
-
-
-def p_comp_operator(p):
+def p_expression(p):
     '''
-    comp_operator : LT
+    expression : simple_expression comparison_operator simple_expression
+    | simple_expression
+    '''
+    pass
+
+def p_operation_sub_block(p):
+    '''
+    operation_sub_block : BEGIN statement_sequence END
+    '''
+    if len(statements_list) > 0:
+        statements_list[-1] = statements_list[-1] + "\n\t}"
+    print("subblock")
+
+def p_for_id(p):
+    '''
+    for_id : FOR ID
+    '''
+    global  id_in_loop
+    statements_list.append("for("+str(p[2])+"=")
+    id_in_loop=str(p[2])
+
+def p_to_downto(p):
+    '''
+    to_downto : TO
+    | DOWNTO
+    '''
+    global id_in_loop
+    if len(statements_list) > 0:
+        if p[1]=="to":
+            statements_list[-1] = statements_list[-1] +";"+id_in_loop+"<="
+            id_in_loop = id_in_loop+"+"
+        else:
+            statements_list[-1] = statements_list[-1] + ";" + id_in_loop + ">="
+            id_in_loop = id_in_loop + "-"
+def p_for_do(p):
+    '''
+    for_do : DO
+    '''
+    if len(statements_list) > 0:
+        if id_in_loop[-1] == "+":
+            statements_list[-1] = statements_list[-1] +";++"+id_in_loop[:-1]+"){\n\t"
+        else:
+            statements_list[-1] = statements_list[-1] + ";--" + id_in_loop[:-1]+"){\n\t"
+
+
+def p_comparison_operator(p):
+    '''
+    comparison_operator : LT
     | GT
     | LOREQ
     | GOREQ
     | EQ
     '''
+
     global output
     output += p[1]
+    if p[1] is not None and len(statements_list) > 0:
+        if p[1] == "=":
+            statements_list[-1] = statements_list[-1] + "=="
+        elif p[1] == "<>":
+            statements_list[-1] = statements_list[-1] + "!="
+        else:
+            statements_list[-1] = statements_list[-1] + str(p[1])
 
 
-def p_comparison(p):
+def p_simple_expression(p):
     '''
-    comparison : num comp_operator num
+    simple_expression : term additional_oper_list
     '''
-    global output
-    output += p[1] + " " + p[2] + " " + p[3]
+    pass
 
 
-
-def p_statement_logic_operators(p):
+def p_additional_oper_list(p):
     '''
-    statement_logic_operators : logic_operator
-    | AND THEN
-    | OR ELSE
+    additional_oper_list : additional_oper_list additional_oper term
+    | empty
     '''
-    global output
+    pass
 
-    if(len(p) == 1):
-        output += p[1]
-    elif(len(p) == 2):
-        output += p[1] + " " + p[2]
-# def p_error(p):
-#     print("Syntax error at '%s'\n" % p.value)
-#     global wasError
-#     wasError = True
 
-def p_logic_condition(p):
+def p_additional_oper(p):
     '''
-    logic_condition : NOT LP logic_statement statement_logic_operators logic_statement RP
-    | LP logic_statement statement_logic_operators logic_statement RP
+    additional_oper : MINUS
+    | PLUS
+    | OR
     '''
-    global output
-    if(len(p) == 6):
-        output += "! " + p[2] + p[3] + p[4] + p[5] + p[6]
-    elif(len(p) == 5):
-        output += p[1] + p[2] + p[3] + p[4] + p[5]
+    if len(statements_list) > 0:
+        statements_list[-1] = statements_list[-1] + str(p[1])
 
-def p_error(p):
-    raise Exception("Syntax error at '{}' at line: {}.\n".format(p.value,p.lexer.lineno))
 
-global output
-output = ""
-with open('test1_correct_syntax') as f:
-    lines = f.readlines()
-code = "".join(lines)
-parser = yacc.yacc()
-parser.parse(code)
-with open('test1_out.txt', 'w') as file:
-    file.write(c_Code)
+def p_term(p):
+    '''
+    term : factor factor_list
+    '''
+    pass
+
+
+def p_factor_list(p):
+    '''
+    factor_list : factor_list and_div_oper factor
+    | empty
+    '''
+    pass
+
+
+def p_and_div_oper(p):
+    '''
+    and_div_oper : DIV
+    | AND
+    '''
+    if len(statements_list) > 0:
+        if p[1] == 'div':
+            statements_list[-1] = statements_list[-1] + "/"
+        elif p[1] == 'and':
+            statements_list[-1] = statements_list[-1] + "&&"
+
+
+def p_factor(p):
+    '''
+    factor : real_number
+    | ID
+    | LP expression RP
+    | NOT factor
+    '''
+    if p[1] is not None and p[1] != "(" and p[1] != "not":
+        if len(statements_list) > 0:
+            statements_list[-1] = statements_list[-1] + str(p[1])
 
 
 
 #
+# def p_procedure_statement(p):
+#     '''
+#     procedure_statement : ID LP ID_list RP
+#     | ID LP RP
+#     | WRITELN LP ID_list RP
+#     | WRITELN LP RP
+#     | READLN LP ID_list RP
+#     '''
+#     global output
+#     if p[1]=="writeln" and p[3] is not None:
+#         statements_list.append("printf(\"\\n\");")
+#     elif p[1]=="writeln" and p[3] is None and p[4] is None:
+#         stat = "printf(\""
+#         for i in constdef:
+#             if str(i)[0]=="\"":
+#                 stat+="%s "
+#             elif str(i).isnumeric():
+#                 stat += "%d "
+#             else:
+#                 stat += "%f "
+#         stat+="\\n"
+#         stat+="\","
+#         for i in constdef:
+#             stat+=str(i)
+#             if i!=constdef[-1]:
+#                 stat+=","
+#         stat+=");"
+#         constdef.clear()
+#         statements_list.append(stat)
+#     elif p[1]=="writeln" and p[3] is None and p[4] is not None:
+#         stat = "printf(\""
+#         for i in ID_list:
+#             if str(i) not in id_decl.keys():
+#                 raise Exception("Variable " + str(i) + " not declared! ")
+#             elif "int" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "int" in declared_type[
+#                 id_decl[i]]:
+#                 stat += "%d "
+#             elif "double" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "double" in \
+#                     declared_type[id_decl[i]]:
+#                 stat += "%f "
+#             elif "bool" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "bool" in declared_type[
+#                 id_decl[i]]:
+#                 stat += "%d "
+#             elif "char" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "char" in declared_type[
+#                 id_decl[i]]:
+#                 stat += "%s "
+#             else:
+#                 output += "Error!"
+#                 raise Exception("Cannot print this type!")
+#         stat += "\\n"
+#         stat += "\","
+#         for i in ID_list:
+#             stat += str(i)
+#             if i != ID_list[-1]:
+#                 stat += ","
+#         stat += ");"
+#         ID_list.clear()
+#         statements_list.append(stat)
+#     elif p[1]=="readln":
+#         stat = "scanf(\""
+#         for i in ID_list:
+#             if str(i) not in id_decl.keys():
+#                 raise Exception("Variable "+str(i)+" not declared! ")
+#             elif "const" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "const" in declared_type[id_decl[i]]:
+#                 raise Exception("Cannot modify const: "+str(i)+"!")
+#             elif "int" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "int" in declared_type[id_decl[i]]:
+#                 stat += "%d "
+#             elif "double" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "double" in declared_type[id_decl[i]]:
+#                 stat += "%f "
+#             elif "bool" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "bool" in declared_type[id_decl[i]]:
+#                 stat += "%d "
+#             elif "char" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "char" in declared_type[id_decl[i]]:
+#                 stat += "%s "
+#             else:
+#                 raise Exception("Cannot read this type!")
+#             if i==ID_list[-1]:
+#                 stat=stat[:-1]
+#
+#         stat += "\","
+#         for i in ID_list:
+#             if "*" not in str(id_decl[i]):
+#                 stat+="&"
+#             stat += str(i)
+#             if i != ID_list[-1]:
+#                 stat += ","
+#         stat += ");"
+#         ID_list.clear()
+#         statements_list.append(stat)
+#     elif p[4] is not None:
+#         stat=""
+#         for i in ID_list:
+#             stat += str(i)
+#             if i != ID_list[-1]:
+#                 stat += ","
+#         stat += ");"
+#         ID_list.clear()
+#         statements_list[-1]=statements_list[-1]+stat
+#     else:
+#         statements_list[-1]=statements_list[-1]+");"
+#
+
+
+def p_empty(p):
+    '''
+    empty :
+    '''
+    print("empty")
+    pass
+
+
+
+
+def p_error(p):
+    raise Exception("Syntax error at '{}' at line: {}.\n".format(p.value,p.lexer.lineno))
+
+def p_comma(p):
+    '''comma : COMA'''
+    if len(statements_list) > 0:
+        statements_list[-1] = statements_list[-1]+str(p[1])
+
+global output
+output = ""
+with open('test2_correct_syntax') as f:
+    lines = f.readlines()
+code = "".join(lines)
+parser = yacc.yacc()
+parser.parse(code)
+with open('test2_out.txt', 'w') as file:
+    file.write(output)
+
+
+
+
+

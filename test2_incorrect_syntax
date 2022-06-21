@@ -1,4 +1,4 @@
-VAR
+var
 MyAge    : Byte;
 Comments : Strin
 BEGIN
