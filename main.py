@@ -180,7 +180,7 @@ lexer = lex.lex()
 
 #======================================================================================================================================================
 
-with open('test1_correct_syntax') as f:
+with open('test3_correct_syntax') as f:
     lines = f.readlines()
 content = "".join(lines)
 
@@ -254,12 +254,12 @@ def p_var_decl(p):
     for i in ID_list:
         if i != ID_list[-1]:
             if varType == "char*":
-                output += "char "+ i + "[50], "
+                output += "char "+ i + "[100], "
             else:
                 output += i + ", "
         else:
             if varType == "char*":
-                output += "char "+ i + "[50];\n"
+                output += "char "+ i + "[100];\n"
             else:
                 output += i + ";\n"
         id_decl[str(i)] = varType
@@ -293,7 +293,7 @@ def p_procedure_block(p):
 
 def p_procedure(p):
     '''
-    procedure : procedure_header SEMICOL procedure_block SEMICOL
+    procedure : procedure_header SEMICOL program_block SEMICOL
     '''
 
 
@@ -317,7 +317,7 @@ def p_procedure_header(p):
 
 def p_parameters(p):
     '''
-    parameters : id_list COL stand_type_pf
+    parameters : id_list COL stand_type_procedure
     '''
     id_pom = []
     for i in ID_list:
@@ -340,9 +340,9 @@ def p_parameters_list(p):
     ID_list.clear()
 
 
-def p_stand_type_pf(p):
+def p_stand_type_procedure(p):
     '''
-    stand_type_pf : CHAR
+    stand_type_procedure : CHAR
     | INTEGER
     | REAL
     | BOOLEAN
@@ -364,18 +364,7 @@ def p_type_denoter(p):
     | id1
     '''
     pass
-def p_record_section(p):
-    '''
-    record_section : id_list COL type_denoter
-    '''
-    global outputstr
-    for i in ID_list:
-        if i != ID_list[-1]:
-            outputstr += i + ", "  # , end=", ")
-        else:
-            outputstr += i + ";\n"  # ", end=";\n")
-    ID_list.clear()
-    print("record_section")
+
 
 def p_var_decl2(p):
     '''
@@ -483,7 +472,7 @@ def p_stand_type(p):
 
 def p_end_sign(p):
     '''
-    record_end : END
+    end_sign : END
    '''
     global output
     output += "return 0; \n"
@@ -526,8 +515,10 @@ def p_end_sign(p):
 def p_statement_sequence(p):
     '''
     statement_sequence : statement statement_list
+
     '''
     pass
+    print("sequence")
 
 def p_statement_list(p):
     '''
@@ -568,6 +559,7 @@ def p_statement(p):
     '''
     statement : simple_statement
     | structured_statement
+    | for_statement
     '''
     pass
     print("statement")
@@ -597,7 +589,9 @@ def p_loop_statement(p):
 
 
 def p_for_statement(p):
-    '''for_statement : for_id ASSIG expression to_downto expression for_do statement'''
+    '''
+    for_statement : for_id ASSIG expression to_downto expression for_do statement
+    '''
     pass
 
 
@@ -648,7 +642,15 @@ def p_then_part(p):
     '''
     if len(statements_list) > 0:
         statements_list[-1] = statements_list[-1] + ")"
-
+def p_bool_value(p):
+    '''
+    bool_value : TRUE
+    | FALSE
+       '''
+    if p[1] == 'true':
+        output += 'True'
+    else:
+        output += 'False'
 
 def p_else_part(p):
     '''
@@ -696,6 +698,7 @@ def p_expression(p):
     '''
     expression : simple_expression comparison_operator simple_expression
     | simple_expression
+    | bool_value
     '''
     pass
 
@@ -837,8 +840,13 @@ def p_empty(p):
 
 
 
+# def p_error(p):
+#     raise Exception("Syntax error at '{}' at line: {}.\n".format(p.value, p.lexer.lineno))
+
 def p_error(p):
-    raise Exception("Syntax error at '{}' at line: {}.\n".format(p.value, p.lexer.lineno))
+    print("Syntax error at '%s'\n" % p.value)
+    global wasError
+    wasError = True
 
 def p_comma(p):
     '''
@@ -849,12 +857,12 @@ def p_comma(p):
 
 global output
 output = ""
-with open('test2_correct_syntax') as f:
+with open('test3_correct_syntax') as f:
     lines = f.readlines()
 code = "".join(lines)
 parser = yacc.yacc()
 parser.parse(code)
-with open('test3_out.txt', 'w') as file:
+with open('test5_out.txt', 'w') as file:
     file.write(output)
 
 

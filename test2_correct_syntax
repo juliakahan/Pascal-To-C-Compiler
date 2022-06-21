@@ -1,8 +1,9 @@
 program pascal;
 var
 MyAge    : integer;
-IsAdult : boolean;
+Isadult : boolean;
 begin
 MyAge := 22;
-IsAdult := (22 > 18);
+Isadult := True;
+
 end.
