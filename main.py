@@ -178,6 +178,8 @@ def t_error(t):
 
 lexer = lex.lex()
 
+#======================================================================================================================================================
+
 with open('test1_correct_syntax') as f:
     lines = f.readlines()
 content = "".join(lines)
@@ -202,9 +204,6 @@ function_name=""
 
 
 
-
-
-
 def p_pascal_program(p):
     '''
     pascal_program : program_id SEMICOL program_block DOT
@@ -221,6 +220,143 @@ def p_program_id(p):
     output += "#include <stdio.h>\n"
     output += "int main() {\n"
     print("programID")
+
+
+def p_program_block(p):
+    '''
+    program_block : declared_type_block variable_block procedure_block operation_block
+    '''
+    print("block")
+    pass
+
+
+def p_declared_type_block(p):
+    '''
+    declared_type_block : TYPE id_list
+    | empty
+    '''
+    print("type_block")
+    pass
+
+def p_variable_block(p):
+    '''
+    variable_block : VAR var_decl var_decl_list
+    | empty
+    '''
+    print("var_block")
+    pass
+
+def p_var_decl(p):
+    '''
+    var_decl : id_list COL type_denoter SEMICOL
+    '''
+    global output
+    for i in ID_list:
+        if i != ID_list[-1]:
+            if varType == "char*":
+                output += "char "+ i + "[50], "
+            else:
+                output += i + ", "
+        else:
+            if varType == "char*":
+                output += "char "+ i + "[50];\n"
+            else:
+                output += i + ";\n"
+        id_decl[str(i)] = varType
+
+    ID_list.clear()
+    print("id_decl")
+
+def p_var_decl_list(p):
+    '''
+    var_decl_list : var_decl_list var_decl
+    | empty
+    '''
+    pass
+
+def p_id_list(p):
+    '''
+    id_list : ID
+    | id_list COMA ID
+    '''
+    if p[1] is not None:
+        ID_list.append(p[1])
+    else:
+        ID_list.append(p[3])
+
+def p_procedure_block(p):
+    '''
+    procedure_block : procedure_block procedure
+    | empty
+    '''
+    pass
+
+def p_procedure(p):
+    '''
+    procedure : procedure_header SEMICOL procedure_block SEMICOL
+    '''
+
+
+def p_procedure_header(p):
+    '''
+    procedure_header : PROCEDURE ID
+    | PROCEDURE ID LP parameters parameters_list RP
+    '''
+    global output
+    output += "void " + p[2] + "("
+    for i in temp_ID_list:
+        if i != temp_ID_list[-1]:
+            output += i + ", "
+        else:
+            output += i
+    output += ")" + "\n"
+    temp_ID_list.clear()
+    procedure_type.clear()
+    ID_list.clear()
+
+
+def p_parameters(p):
+    '''
+    parameters : id_list COL stand_type_pf
+    '''
+    id_pom = []
+    for i in ID_list:
+        st = procedure_type[-1] + " " + i
+        id_pom.append(st)
+    ID_list.clear()
+    for i in id_pom:
+        ID_list.append(i)
+    procedure_type.clear()
+    print("param")
+
+
+def p_parameters_list(p):
+    '''
+    parameters_list : parameters_list SEMICOL parameters
+    | empty
+    '''
+    for i in ID_list:
+        temp_ID_list.append(i)
+    ID_list.clear()
+
+
+def p_stand_type_pf(p):
+    '''
+    stand_type_pf : CHAR
+    | INTEGER
+    | REAL
+    | BOOLEAN
+    '''
+    if p[1] == 'char':
+        procedure_type.append("char")
+    if p[1] == 'integer':
+        procedure_type.append("int")
+    elif p[1] == 'real':
+        procedure_type.append("double")
+    elif p[1] == 'boolean':
+        procedure_type.append("bool")
+    print("stand_type")
+
 
 def p_type_denoter(p):
     '''
@@ -241,9 +377,9 @@ def p_record_section(p):
     ID_list.clear()
     print("record_section")
 
-def p_var_decl(p):
+def p_var_decl2(p):
     '''
-        var_decl : ID
+        var_decl2 : ID
         | id_list COMA ID
         '''
     global output
@@ -257,7 +393,7 @@ def p_var_decl(p):
     elif len(p) == 1:
         ID_list.append(p[1])
         output += p[1]
-    print("programIDLIST")
+    print("programVarDecl2")
 
 
 
@@ -272,7 +408,6 @@ def p_var_decl(p):
 
 
 
-#======================================================================================================================================================
 
 
 def p_sign(p):
@@ -359,145 +494,7 @@ def p_end_sign(p):
 
 
 
-def p_program_block(p):
-    '''
-    program_block : variable_block procedure_block operation_block
-    '''
-    print("block")
-    pass
 
-
-def p_declared_type_block(p):
-    '''
-    declared_type_block : TYPE id_list
-    | empty
-    '''
-    print("type_block")
-    pass
-
-def p_variable_block(p):
-    '''
-    variable_block : VAR var_decl var_decl_list
-    | empty
-    '''
-    print("var_block")
-    pass
-
-def p_var_decl(p):
-    '''
-    var_decl : id_list COL type_denoter SEMICOL
-    '''
-    global output
-    for i in ID_list:
-        if i != ID_list[-1]:
-            if varType == "char*":
-                output += "char "+ i + "[50], "
-            else:
-                output += i + ", "
-        else:
-            if varType == "char*":
-                output += "char "+ i + "[50];\n"
-            else:
-                output += i + ";\n"
-        id_decl[str(i)] = varType
-
-    ID_list.clear()
-    print("id_decl")
-
-def p_var_decl_list(p):
-    '''
-    var_decl_list : var_decl_list var_decl
-    | empty
-    '''
-    pass
-
-def p_id_list(p):
-    '''
-    id_list : ID
-    | id_list COMA ID
-    '''
-    if p[1] is not None:
-        ID_list.append(p[1])
-    else:
-        ID_list.append(p[3])
-
-def p_procedure_block(p):
-    '''
-    procedure_block : procedure_block procedure
-    | empty
-    '''
-    pass
-
-def p_procedure(p):
-    '''
-    procedure : procedure_header SEMICOL procedure_block SEMICOL
-    '''
-
-
-def p_procedure_header(p):
-    '''
-    procedure_header : PROCEDURE ID
-    | PROCEDURE ID LP parameters parameters_list RP
-    '''
-    global output
-    output += "void " + p[2] + "("  # ,end="")
-    for i in temp_ID_list:
-        if i != temp_ID_list[-1]:
-            output += i + ", "  # ,end=", ")
-        else:
-            output += i  # , end="")
-    output += ")" + "\n"  # , end="\n")
-    temp_ID_list.clear()
-    procedure_type.clear()
-    ID_list.clear()
-
-
-def p_parameters(p):
-    '''
-    parameters : id_list COL stand_type_pf
-    '''
-    id_pom = []
-    for i in ID_list:
-        st = procedure_type[-1] + " " + i
-        id_pom.append(st)
-    ID_list.clear()
-    for i in id_pom:
-        ID_list.append(i)
-    procedure_type.clear()
-    print("param")
-
-
-def p_parameters_list(p):
-    '''
-    parameters_list : parameters_list SEMICOL parameters
-    | empty
-    '''
-    for i in ID_list:
-        temp_ID_list.append(i)
-    ID_list.clear()
-
-
-def p_stand_type_pf(p):
-    '''
-    stand_type_pf : CHAR
-    | INTEGER
-    | REAL
-    | BOOLEAN
-    '''
-    if p[1] == 'char':
-        procedure_type.append("char")
-    if p[1] == 'integer':
-        procedure_type.append("int")
-    elif p[1] == 'real':
-        procedure_type.append("double")
-    elif p[1] == 'boolean':
-        procedure_type.append("bool")
-    print("stand_type")
-
-
-10
-7
-7
 
 
 
@@ -844,7 +841,9 @@ def p_error(p):
     raise Exception("Syntax error at '{}' at line: {}.\n".format(p.value, p.lexer.lineno))
 
 def p_comma(p):
-    '''comma : COMA'''
+    '''
+    comma : COMA
+    '''
     if len(statements_list) > 0:
         statements_list[-1] = statements_list[-1]+str(p[1])
 
@@ -855,7 +854,7 @@ with open('test2_correct_syntax') as f:
 code = "".join(lines)
 parser = yacc.yacc()
 parser.parse(code)
-with open('test2_out.txt', 'w') as file:
+with open('test3_out.txt', 'w') as file:
     file.write(output)
 
 
