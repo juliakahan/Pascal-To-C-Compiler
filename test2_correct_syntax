@@ -1,8 +1,8 @@
 program pascal;
 var
 MyAge    : integer;
-RealNumber : integer;
+IsAdult : boolean;
 begin
-MyAge:=22;
-Comments := 15
+MyAge := 22;
+IsAdult := (22 > 18);
 end.

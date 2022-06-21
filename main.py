@@ -142,15 +142,19 @@ t_RCURLBR = r'\}'
 
 t_INTEGER = r'^[1-9][0-9]*|0$'
 t_CHAR= r'(L)?\'([^\\\n]|(\\.))*?\''
-t_REAL = r'((\+|-)?([0-9]+)(\.[0-9]+)?)|((\+|-)?\.?[0-9]+)'
-t_BOOLEAN = r'(true|false)'
+#t_REAL = r'((\+|-)?([0-9]+)(\.[0-9]+)?)|((\+|-)?\.?[0-9]+)'
+# t_BOOLEAN = r'true|false'
 t_EMPTY = r'""'
 
 
 def t_NUMBER(t):
-    r"""[0-9][0-9]*"""
+    r'''[0-9][0-9]*'''
     t.value = int(t.value)
     return t
+
+def t_BOOLEAN(t):
+    r''' true | false '''
+    t.value = bool(t.value)
 
 
 def t_newline(t):
@@ -344,8 +348,7 @@ def p_stand_type(p):
 
 def p_end_sign(p):
     '''
-    record_end :
-    | END
+    record_end : END
    '''
     global output
     output += "return 0; \n"
@@ -492,7 +495,9 @@ def p_stand_type_pf(p):
     print("stand_type")
 
 
-
+10
+7
+7
 
 
 
@@ -711,7 +716,7 @@ def p_for_id(p):
     '''
     global  id_in_loop
     statements_list.append("for("+str(p[2])+"=")
-    id_in_loop=str(p[2])
+    id_in_loop = str(p[2])
 
 def p_to_downto(p):
     '''
@@ -726,6 +731,7 @@ def p_to_downto(p):
         else:
             statements_list[-1] = statements_list[-1] + ";" + id_in_loop + ">="
             id_in_loop = id_in_loop + "-"
+
 def p_for_do(p):
     '''
     for_do : DO
@@ -819,110 +825,9 @@ def p_factor(p):
     if p[1] is not None and p[1] != "(" and p[1] != "not":
         if len(statements_list) > 0:
             statements_list[-1] = statements_list[-1] + str(p[1])
+    print("factor")
 
 
-
-#
-# def p_procedure_statement(p):
-#     '''
-#     procedure_statement : ID LP ID_list RP
-#     | ID LP RP
-#     | WRITELN LP ID_list RP
-#     | WRITELN LP RP
-#     | READLN LP ID_list RP
-#     '''
-#     global output
-#     if p[1]=="writeln" and p[3] is not None:
-#         statements_list.append("printf(\"\\n\");")
-#     elif p[1]=="writeln" and p[3] is None and p[4] is None:
-#         stat = "printf(\""
-#         for i in constdef:
-#             if str(i)[0]=="\"":
-#                 stat+="%s "
-#             elif str(i).isnumeric():
-#                 stat += "%d "
-#             else:
-#                 stat += "%f "
-#         stat+="\\n"
-#         stat+="\","
-#         for i in constdef:
-#             stat+=str(i)
-#             if i!=constdef[-1]:
-#                 stat+=","
-#         stat+=");"
-#         constdef.clear()
-#         statements_list.append(stat)
-#     elif p[1]=="writeln" and p[3] is None and p[4] is not None:
-#         stat = "printf(\""
-#         for i in ID_list:
-#             if str(i) not in id_decl.keys():
-#                 raise Exception("Variable " + str(i) + " not declared! ")
-#             elif "int" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "int" in declared_type[
-#                 id_decl[i]]:
-#                 stat += "%d "
-#             elif "double" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "double" in \
-#                     declared_type[id_decl[i]]:
-#                 stat += "%f "
-#             elif "bool" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "bool" in declared_type[
-#                 id_decl[i]]:
-#                 stat += "%d "
-#             elif "char" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "char" in declared_type[
-#                 id_decl[i]]:
-#                 stat += "%s "
-#             else:
-#                 output += "Error!"
-#                 raise Exception("Cannot print this type!")
-#         stat += "\\n"
-#         stat += "\","
-#         for i in ID_list:
-#             stat += str(i)
-#             if i != ID_list[-1]:
-#                 stat += ","
-#         stat += ");"
-#         ID_list.clear()
-#         statements_list.append(stat)
-#     elif p[1]=="readln":
-#         stat = "scanf(\""
-#         for i in ID_list:
-#             if str(i) not in id_decl.keys():
-#                 raise Exception("Variable "+str(i)+" not declared! ")
-#             elif "const" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "const" in declared_type[id_decl[i]]:
-#                 raise Exception("Cannot modify const: "+str(i)+"!")
-#             elif "int" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "int" in declared_type[id_decl[i]]:
-#                 stat += "%d "
-#             elif "double" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "double" in declared_type[id_decl[i]]:
-#                 stat += "%f "
-#             elif "bool" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "bool" in declared_type[id_decl[i]]:
-#                 stat += "%d "
-#             elif "char" in str(id_decl[i]) or id_decl[i] in declared_type.keys() and "char" in declared_type[id_decl[i]]:
-#                 stat += "%s "
-#             else:
-#                 raise Exception("Cannot read this type!")
-#             if i==ID_list[-1]:
-#                 stat=stat[:-1]
-#
-#         stat += "\","
-#         for i in ID_list:
-#             if "*" not in str(id_decl[i]):
-#                 stat+="&"
-#             stat += str(i)
-#             if i != ID_list[-1]:
-#                 stat += ","
-#         stat += ");"
-#         ID_list.clear()
-#         statements_list.append(stat)
-#     elif p[4] is not None:
-#         stat=""
-#         for i in ID_list:
-#             stat += str(i)
-#             if i != ID_list[-1]:
-#                 stat += ","
-#         stat += ");"
-#         ID_list.clear()
-#         statements_list[-1]=statements_list[-1]+stat
-#     else:
-#         statements_list[-1]=statements_list[-1]+");"
-#
 
 
 def p_empty(p):
@@ -936,7 +841,7 @@ def p_empty(p):
 
 
 def p_error(p):
-    raise Exception("Syntax error at '{}' at line: {}.\n".format(p.value,p.lexer.lineno))
+    raise Exception("Syntax error at '{}' at line: {}.\n".format(p.value, p.lexer.lineno))
 
 def p_comma(p):
     '''comma : COMA'''
