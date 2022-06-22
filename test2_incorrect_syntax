@@ -1,9 +1,0 @@
-var
-MyAge    : Byte;
-Comments : Strin
-BEGIN
-MyAge:=22;
-Comments:='Hi, there ! I'm learning Pascal';
-Writeln('I am ',MyAge,' years old');
-Writeln(Comments);
-END.
