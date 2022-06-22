@@ -1,8 +1,0 @@
-#include <stdio.h>
-int main() {
-int MyAge;
-bool IsAdult;
->MyAge = 22;
-IsAdult = 22>18;
-return 0; 
-}
