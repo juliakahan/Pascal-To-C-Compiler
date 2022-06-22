@@ -855,14 +855,20 @@ def p_comma(p):
     if len(statements_list) > 0:
         statements_list[-1] = statements_list[-1]+str(p[1])
 
+
+
+
+
+
+#==============================================================ADD YOUR EXAMPLE==============================================================
 global output
 output = ""
-with open('test3_correct_syntax') as f:
+with open('myPascalCode') as f:  #introduce name of your file
     lines = f.readlines()
 code = "".join(lines)
 parser = yacc.yacc()
 parser.parse(code)
-with open('test5_out.txt', 'w') as file:
+with open('conversionResult', 'w') as file:
     file.write(output)
 
 

@@ -1,0 +1,7 @@
+program pascal;
+var
+Celsius, Fahrenheit: integer;
+begin
+Celsius := 5;
+Fahrenheit := 10
+end.
